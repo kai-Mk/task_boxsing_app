@@ -1,0 +1,220 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                 String    @id @default(nanoid())
+  name               String
+  email              String    @unique
+  passwordHash       String?   // nullable for Google OAuth users
+  lastSelectedTeamId String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  // Relations
+  accounts              Account[]
+  teamMemberships       TeamMember[]
+  ownedTeams            Team[]           @relation("TeamOwner")
+  tasks                 Task[]
+  sentMeetingRequests   MeetingRequest[] @relation("MeetingRequester")
+  receivedMeetingRequests MeetingRequest[] @relation("MeetingTarget")
+  createdInvitations    TeamInvitation[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(nanoid())
+  userId            String
+  provider          String  // "credentials", "google", etc.
+  providerAccountId String  // external ID (Google sub, etc.)
+  accessToken       String?
+  refreshToken      String?
+  expiresAt         Int?
+  tokenType         String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Team {
+  id          String    @id @default(nanoid())
+  name        String
+  description String?
+  ownerId     String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime? // soft delete
+
+  // Relations
+  owner            User             @relation("TeamOwner", fields: [ownerId], references: [id])
+  members          TeamMember[]
+  tasks            Task[]
+  meetingRequests  MeetingRequest[]
+  invitations      TeamInvitation[]
+
+  @@map("teams")
+}
+
+model TeamMember {
+  id        String   @id @default(nanoid())
+  teamId    String
+  userId    String
+  role      TeamRole @default(MEMBER)
+  createdAt DateTime @default(now())
+
+  // Relations
+  team      Team                     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user      User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  positions TeamMemberPosition[]
+
+  @@unique([teamId, userId])
+  @@map("team_members")
+}
+
+model Position {
+  id        String   @id @default(nanoid())
+  name      String   @unique // "FE", "BE", "QA", etc.
+  label     String   // display name
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  teamMemberPositions TeamMemberPosition[]
+
+  @@map("positions")
+}
+
+model TeamMemberPosition {
+  id           String @id @default(nanoid())
+  teamMemberId String
+  positionId   String
+
+  // Relations
+  teamMember TeamMember @relation(fields: [teamMemberId], references: [id], onDelete: Cascade)
+  position   Position   @relation(fields: [positionId], references: [id], onDelete: Cascade)
+
+  @@unique([teamMemberId, positionId])
+  @@map("team_member_positions")
+}
+
+model Task {
+  id              String            @id @default(nanoid())
+  teamId          String
+  userId          String
+  date            DateTime          @db.Date
+  title           String
+  description     String?
+  startTime       String            // "09:00", "14:30", etc. (HH:mm format)
+  endTime         String            // "10:00", "15:45", etc. (HH:mm format)
+  type            TaskType          @default(WORK)
+  status          TaskStatus        @default(TODO)
+  color           TaskColor         @default(BLUE)
+  mtgAvailability MtgAvailability   @default(AVAILABLE)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  // Relations
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("tasks")
+}
+
+model MeetingRequest {
+  id              String                @id @default(nanoid())
+  teamId          String
+  requesterId     String
+  targetId        String
+  date            DateTime              @db.Date
+  startTime       String                // "14:00", etc.
+  endTime         String                // "15:00", etc.
+  requestMessage  String
+  responseMessage String?
+  cancelMessage   String?
+  status          MeetingRequestStatus  @default(PENDING)
+  respondedAt     DateTime?
+  canceledAt      DateTime?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  // Relations
+  team      Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  requester User @relation("MeetingRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+  target    User @relation("MeetingTarget", fields: [targetId], references: [id], onDelete: Cascade)
+
+  @@map("meeting_requests")
+}
+
+model TeamInvitation {
+  id              String    @id @default(nanoid())
+  teamId          String
+  code            String    @unique
+  expiresAt       DateTime?
+  maxUses         Int?      // nullable = unlimited
+  usedCount       Int       @default(0)
+  createdByUserId String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  team      Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  createdBy User @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+
+  @@map("team_invitations")
+}
+
+// Enums
+enum TeamRole {
+  ADMIN
+  MEMBER
+}
+
+enum TaskType {
+  WORK
+  BREAK
+}
+
+enum TaskStatus {
+  TODO
+  DONE
+}
+
+enum TaskColor {
+  RED
+  ORANGE
+  YELLOW
+  GREEN
+  BLUE
+  PURPLE
+  PINK
+  GRAY
+}
+
+enum MtgAvailability {
+  AVAILABLE
+  CHAT_ONLY
+  UNAVAILABLE
+}
+
+enum MeetingRequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELED
+}
