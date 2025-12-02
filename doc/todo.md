@@ -9,20 +9,21 @@ MVP 機能を実装するための作業リスト。
 
 ### 1-1. Auth.js セットアップ
 
-- [ ] Auth.js の設定ファイル作成 (`server/auth/config.ts`)
-- [ ] Prisma Adapter の設定
-- [ ] セッション管理の設定
-- [ ] `getCurrentUser()` ヘルパー作成
+- [x] Auth.js の設定ファイル作成 (`lib/auth.ts`) - NextAuth v4, JWT戦略
+- [x] セッション管理の設定
+- [x] `getCurrentUser()` ヘルパー作成 (`server/auth/getCurrentUser.ts`)
 
 ### 1-2. メール/パスワード認証
 
-- [ ] 新規登録ページ (`app/(public)/register/page.tsx`)
-- [ ] 新規登録フォーム（名前・メール・パスワード）
-- [ ] パスワードハッシュ化処理
-- [ ] 登録 API (`app/api/auth/register/route.ts`)
-- [ ] ログインページ (`app/(public)/login/page.tsx`)
-- [ ] ログインフォーム
-- [ ] Credentials Provider 設定
+- [x] 新規登録ページ (`app/(auth)/register/page.tsx`)
+- [x] 新規登録フォーム（名前・メール・パスワード） - react-hook-form + zod
+- [x] パスワードハッシュ化処理 - bcryptjs
+- [x] 登録 API (`app/api/auth/register/route.ts`)
+- [x] User Repository / Service 作成
+- [x] ログインページ (`app/(auth)/login/page.tsx`)
+- [x] ログインフォーム - react-hook-form + zod + signIn
+- [x] Credentials Provider 設定
+- [x] Toast コンポーネント作成（成功通知用）
 
 ### 1-3. Google OAuth
 
@@ -32,8 +33,21 @@ MVP 機能を実装するための作業リスト。
 
 ### 1-4. 認証ガード
 
-- [ ] 未ログイン時のリダイレクト処理
-- [ ] 保護ルートのミドルウェア設定
+- [x] 未ログイン時のリダイレクト処理
+- [x] 保護ルートのミドルウェア設定 (`middleware.ts` - withAuth)
+
+### 1-5. 共通UIコンポーネント（認証で作成）
+
+- [x] Input コンポーネント（パスワード表示/非表示トグル付き）
+- [x] Button コンポーネント
+- [x] AuthCard コンポーネント
+- [x] Toast コンポーネント（フェードアニメーション付き）
+
+### 1-6. 共通ユーティリティ（認証で作成）
+
+- [x] Prisma クライアント (`server/db.ts`)
+- [x] API クライアント (`lib/api-client.ts`)
+- [x] バリデーションスキーマ (`lib/validators/auth.ts`)
 
 ---
 
