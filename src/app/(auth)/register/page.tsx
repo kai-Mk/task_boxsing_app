@@ -1,3 +1,7 @@
+import Link from "next/link";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+
 const RegisterPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -7,63 +11,31 @@ const RegisterPage = () => {
         </h1>
 
         <form className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              名前
-            </label>
-            <input
-              type="text"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-              placeholder="山田 太郎"
-            />
-          </div>
+          <Input label="名前" type="text" name="name" />
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              メールアドレス
-            </label>
-            <input
-              type="email"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-              placeholder="example@email.com"
-            />
-          </div>
+          <Input label="メールアドレス" type="email" name="email" />
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              パスワード
-            </label>
-            <input
-              type="password"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-              placeholder="8文字以上"
-            />
-          </div>
+          <Input
+            label="パスワード"
+            type="password"
+            name="password"
+            hint="英数字8文字以上"
+          />
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              パスワード（確認）
-            </label>
-            <input
-              type="password"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-              placeholder="もう一度入力"
-            />
-          </div>
+          <Input
+            label="パスワード（確認）"
+            type="password"
+            name="confirmPassword"
+          />
 
-          <button
-            type="submit"
-            className="w-full py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
-          >
-            登録する
-          </button>
+          <Button type="submit">登録する</Button>
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-600">
           すでにアカウントをお持ちの方は
-          <a href="/login" className="text-blue-600 hover:underline ml-1">
+          <Link href="/login" className="text-blue-600 hover:underline ml-1">
             ログイン
-          </a>
+          </Link>
         </p>
       </div>
     </div>

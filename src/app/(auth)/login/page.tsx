@@ -1,3 +1,7 @@
+import Link from "next/link";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+
 const LoginPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -7,41 +11,18 @@ const LoginPage = () => {
         </h1>
 
         <form className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              メールアドレス
-            </label>
-            <input
-              type="email"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-              placeholder="example@email.com"
-            />
-          </div>
+          <Input label="メールアドレス" type="email" name="email" />
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              パスワード
-            </label>
-            <input
-              type="password"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-              placeholder="••••••••"
-            />
-          </div>
+          <Input label="パスワード" type="password" name="password" />
 
-          <button
-            type="submit"
-            className="w-full py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
-          >
-            ログイン
-          </button>
+          <Button type="submit">ログイン</Button>
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-600">
           アカウントをお持ちでない方は
-          <a href="/register" className="text-blue-600 hover:underline ml-1">
+          <Link href="/register" className="text-blue-600 hover:underline ml-1">
             新規登録
-          </a>
+          </Link>
         </p>
       </div>
     </div>
