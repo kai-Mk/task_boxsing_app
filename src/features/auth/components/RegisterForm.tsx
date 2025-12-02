@@ -57,9 +57,11 @@ const RegisterForm = () => {
       )}
 
       <AuthCard title="新規登録">
-        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+        <form className="relative space-y-6" onSubmit={handleSubmit(onSubmit)}>
           {error && (
-            <p className="text-sm text-red-500 text-center">{error}</p>
+            <p className="absolute -top-7 left-0 right-0 text-sm text-red-500 text-center">
+              {error}
+            </p>
           )}
 
           <Input
