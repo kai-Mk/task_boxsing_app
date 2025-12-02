@@ -42,6 +42,28 @@ if (isUser(response)) {
 
 ## コードスタイル
 
+### 関数定義
+
+- **アロー関数（const）で統一**: `function` 宣言は使わない
+- コンポーネント、ヘルパー関数、ユーティリティすべて `const` で定義
+
+```ts
+// NG
+function getCurrentUser() {
+  // ...
+}
+
+// OK
+const getCurrentUser = async () => {
+  // ...
+};
+
+// コンポーネントも同様
+const TaskList = () => {
+  // ...
+};
+```
+
 ### 可読性
 
 - ネストは深くしない（可能な限り早期リターン）
