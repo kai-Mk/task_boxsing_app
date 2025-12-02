@@ -131,6 +131,7 @@ src/
 
     -   `features/**/components` 配下に Client Component として定義し、
     -   API を叩いて再描画する役割に集中させる。
+    -   API 呼び出しは `lib/api-client.ts` の fetch ラッパーを使用する。
 
 ### 例：個人タスク画面
 
