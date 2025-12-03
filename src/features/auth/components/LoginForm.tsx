@@ -12,7 +12,7 @@ import Toast from "@/components/ui/Toast";
 import AuthCard from "./AuthCard";
 import { loginSchema, LoginFormData } from "@/lib/validators/auth";
 import { apiClient } from "@/lib/api-client";
-import { UserWithTeams } from "@/lib/types/user";
+import { UserWithTeams } from "@/types/user";
 
 const LoginForm = () => {
   const router = useRouter();

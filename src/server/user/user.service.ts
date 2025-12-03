@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import { userRepository } from "./user.repository";
-import { UserWithTeams } from "@/lib/types/user";
+import { UserWithTeams } from "@/types/user";
 
 const SALT_ROUNDS = 10;
 
