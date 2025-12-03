@@ -24,7 +24,7 @@ model User {
 
   // Relations
   accounts              Account[]
-  teamMemberships       TeamMember[]
+  teamMembers           TeamMember[]
   ownedTeams            Team[]           @relation("TeamOwner")
   tasks                 Task[]
   sentMeetingRequests   MeetingRequest[] @relation("MeetingRequester")

@@ -16,4 +16,28 @@ export const userRepository = {
       where: { email },
     });
   },
+
+  findByIdWithTeams: async (id: string) => {
+    return prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        lastSelectedTeamId: true,
+        teamMembers: {
+          select: {
+            teamId: true,
+            role: true,
+            team: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  },
 };

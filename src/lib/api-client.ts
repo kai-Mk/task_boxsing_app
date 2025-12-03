@@ -3,6 +3,11 @@ type ApiResponse<T> =
   | { success: false; message: string };
 
 export const apiClient = {
+  get: async <T>(url: string): Promise<ApiResponse<T>> => {
+    const res = await fetch(url);
+    return res.json();
+  },
+
   post: async <T>(url: string, data: unknown): Promise<ApiResponse<T>> => {
     const res = await fetch(url, {
       method: "POST",

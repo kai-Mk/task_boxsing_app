@@ -11,12 +11,15 @@ import Button from "@/components/ui/Button";
 import Toast from "@/components/ui/Toast";
 import AuthCard from "./AuthCard";
 import { loginSchema, LoginFormData } from "@/lib/validators/auth";
+import { apiClient } from "@/lib/api-client";
+import { UserWithTeams } from "@/lib/types/user";
 
 const LoginForm = () => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [redirectPath, setRedirectPath] = useState("/");
 
   const {
     register,
@@ -42,12 +45,29 @@ const LoginForm = () => {
       return;
     }
 
+    // ユーザー情報（チーム含む）を取得
+    const userRes = await apiClient.get<UserWithTeams>("/api/user/me");
+
+    if (!userRes.success) {
+      setError(userRes.message);
+      setIsLoading(false);
+      return;
+    }
+
+    const { teamMembers, lastSelectedTeamId } = userRes.data;
+    if (teamMembers.length === 0) {
+      setRedirectPath("/teams/new");
+    } else {
+      const teamId = lastSelectedTeamId ?? teamMembers[0].teamId;
+      setRedirectPath(`/teams/${teamId}/me`);
+    }
+
     setShowSuccessToast(true);
   };
 
   const handleToastClose = () => {
     setShowSuccessToast(false);
-    router.push("/");
+    router.push(redirectPath);
   };
 
   return (

@@ -1,10 +1,15 @@
 import bcrypt from "bcryptjs";
 import { userRepository } from "./user.repository";
+import { UserWithTeams } from "@/lib/types/user";
 
 const SALT_ROUNDS = 10;
 
 type RegisterResult =
   | { success: true; user: { id: string; name: string; email: string } }
+  | { success: false; message: string; status: number };
+
+type GetCurrentUserWithTeamsResult =
+  | { success: true; data: UserWithTeams }
   | { success: false; message: string; status: number };
 
 export const userService = {
@@ -37,5 +42,13 @@ export const userService = {
       success: true,
       user: { id: user.id, name: user.name, email: user.email },
     };
+  },
+
+  getCurrentUserWithTeams: async (userId: string): Promise<GetCurrentUserWithTeamsResult> => {
+    const user = await userRepository.findByIdWithTeams(userId);
+    if (!user) {
+      return { success: false, message: "ユーザーが見つかりません", status: 404 };
+    }
+    return { success: true, data: user };
   },
 };

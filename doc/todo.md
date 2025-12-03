@@ -55,7 +55,7 @@ MVP 機能を実装するための作業リスト。
 
 ### 2-1. チーム作成
 
-- [ ] チーム作成ページ (`app/(app)/teams/new/page.tsx`)
+- [ ] チーム作成ページ (`app/(app)/teams/new/page.tsx`)  ← `/teams/new`
 - [ ] チーム作成フォーム（名前・説明）
 - [ ] Team Repository / Service 作成
 - [ ] チーム作成 API
@@ -63,9 +63,9 @@ MVP 機能を実装するための作業リスト。
 
 ### 2-2. チーム選択・切り替え
 
-- [ ] ログイン後のチーム振り分けロジック
-  - チームなし → チーム作成画面へ
-  - チームあり → lastSelectedTeamId のチームへ
+- [x] ログイン後のチーム振り分けロジック
+  - チームなし → `/teams/new` へ
+  - チームあり → `/teams/[lastSelectedTeamId]/me` へ
 - [ ] ヘッダーにチーム切り替えドロップダウン
 - [ ] lastSelectedTeamId 更新処理
 
@@ -84,7 +84,7 @@ MVP 機能を実装するための作業リスト。
 
 ### 3-2. タスク管理画面
 
-- [ ] 個人タスクページ (`app/(app)/[teamId]/me/page.tsx`)
+- [ ] 個人タスクページ (`app/(app)/teams/[teamId]/me/page.tsx`)
 - [ ] タスクリスト表示（左側）
 - [ ] 完了チェックボックス
 - [ ] タイムボクシングビュー（右側）
@@ -117,7 +117,7 @@ MVP 機能を実装するための作業リスト。
 
 ### 4-1. メンバー一覧
 
-- [ ] チームメンバー一覧ページ (`app/(app)/[teamId]/team/page.tsx`)
+- [ ] チームメンバー一覧ページ (`app/(app)/teams/[teamId]/team/page.tsx`)
 - [ ] メンバーカード表示（横スクロール）
 - [ ] 名前・ポジション・MTG 可否表示
 - [ ] 名前検索機能
@@ -126,7 +126,7 @@ MVP 機能を実装するための作業リスト。
 
 ### 4-2. メンバー詳細
 
-- [ ] メンバー詳細ページ (`app/(app)/[teamId]/team/[userId]/page.tsx`)
+- [ ] メンバー詳細ページ (`app/(app)/teams/[teamId]/team/[userId]/page.tsx`)
 - [ ] マイページと同じ UI（参照のみ）
 - [ ] MTG ステータスバッジ表示
 
@@ -159,7 +159,7 @@ MVP 機能を実装するための作業リスト。
 
 ### 5-2. チーム設定（ADMIN のみ）
 
-- [ ] チーム設定ページ (`app/(app)/[teamId]/settings/page.tsx`)
+- [ ] チーム設定ページ (`app/(app)/teams/[teamId]/settings/page.tsx`)
 - [ ] ADMIN 権限チェック
 - [ ] チーム名変更
 - [ ] 招待コード発行・表示
