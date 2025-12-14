@@ -65,6 +65,9 @@ MVP 機能を実装するための作業リスト。
 - [x] アプリ用レイアウト・ヘッダー作成
 - [x] Buttonにloading状態追加
 - [x] Input/TextAreaにrequired・hint追加
+- [x] ConfirmDialogコンポーネント作成
+- [x] ヘッダーにログアウトボタン追加
+- [x] `getAuthenticatedUser()` ヘルパー作成
 
 ### 2-2. チーム選択・切り替え
 
@@ -80,16 +83,19 @@ MVP 機能を実装するための作業リスト。
 
 ### 3-1. タスク API・バックエンド
 
-- [ ] Task Repository 作成
-- [ ] Task Service 作成（時間バリデーション等）
-- [ ] タスク一覧取得 API (`GET /api/tasks`)
-- [ ] タスク作成 API (`POST /api/tasks`)
-- [ ] タスク更新 API (`PUT /api/tasks/[taskId]`)
-- [ ] タスク削除 API (`DELETE /api/tasks/[taskId]`)
+- [x] Task Repository 作成
+- [x] Task Service 作成
+- [x] タスク一覧取得 API (`GET /api/teams/[teamId]/tasks`)
+- [x] タスク作成 API (`POST /api/teams/[teamId]/tasks`)
+- [x] TeamMember Repository / Service 作成
+- [x] Zodバリデーションスキーマ (`lib/validators/task.ts`)
+- [x] 日付ユーティリティ (`lib/utils/date.ts`)
+- [ ] タスク更新 API (`PUT /api/teams/[teamId]/tasks/[taskId]`)
+- [ ] タスク削除 API (`DELETE /api/teams/[teamId]/tasks/[taskId]`)
 
 ### 3-2. タスク管理画面
 
-- [ ] 個人タスクページ (`app/(app)/teams/[teamId]/me/page.tsx`)
+- [x] 個人タスクページ SSRデータ取得 (`app/(app)/teams/[teamId]/me/page.tsx`)
 - [ ] タスクリスト表示（左側）
 - [ ] 完了チェックボックス
 - [ ] タイムボクシングビュー（右側）
