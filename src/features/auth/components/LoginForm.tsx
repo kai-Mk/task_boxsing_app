@@ -105,6 +105,7 @@ const LoginForm = () => {
           <Button
             type="submit"
             label={isLoading ? "ログイン中..." : "ログイン"}
+            loading={isLoading}
           />
         </form>
 

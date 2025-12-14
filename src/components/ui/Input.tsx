@@ -10,9 +10,10 @@ type InputProps = {
   hint?: string;
   error?: string;
   register: UseFormRegisterReturn;
+  required?: boolean;
 };
 
-const Input = ({ label, type, hint, error, register }: InputProps) => {
+const Input = ({ label, type, hint, error, register, required = false }: InputProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === "password";
 
@@ -22,6 +23,9 @@ const Input = ({ label, type, hint, error, register }: InputProps) => {
     <div className="relative pb-3">
       <div className="flex items-baseline gap-2 mb-1">
         <label className="text-sm font-medium text-gray-700">{label}</label>
+        {required && (
+          <span className="text-xs text-white bg-red-500 px-1.5 py-0.5 rounded">必須</span>
+        )}
         {hint && <span className="text-sm text-gray-500">{hint}</span>}
       </div>
       <div className="relative">

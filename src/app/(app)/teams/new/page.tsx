@@ -1,10 +1,7 @@
-const TeamsNewPage = () => {
-  return (
-    <div>
-      <h1>チーム作成</h1>
-      {/* TODO: チーム作成フォーム */}
-    </div>
-  );
+import CreateTeamForm from "@/features/teams/components/CreateTeamForm";
+
+const CreateTeamPage = () => {
+  return <CreateTeamForm />;
 };
 
-export default TeamsNewPage;
+export default CreateTeamPage;
