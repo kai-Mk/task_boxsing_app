@@ -1,23 +1,18 @@
 import bcrypt from "bcryptjs";
 import { userRepository } from "./user.repository";
 import { UserWithTeams } from "@/types/user";
+import { ServiceResult } from "@/types/server/result";
 
 const SALT_ROUNDS = 10;
 
-type RegisterResult =
-  | { success: true; user: { id: string; name: string; email: string } }
-  | { success: false; message: string; status: number };
-
-type GetCurrentUserWithTeamsResult =
-  | { success: true; data: UserWithTeams }
-  | { success: false; message: string; status: number };
+type RegisterUser = { id: string; name: string; email: string };
 
 export const userService = {
   register: async (data: {
     name: string;
     email: string;
     password: string;
-  }): Promise<RegisterResult> => {
+  }): Promise<ServiceResult<RegisterUser>> => {
     // メール重複チェック
     const existingUser = await userRepository.findByEmail(data.email);
     if (existingUser) {
@@ -40,11 +35,11 @@ export const userService = {
 
     return {
       success: true,
-      user: { id: user.id, name: user.name, email: user.email },
+      data: { id: user.id, name: user.name, email: user.email },
     };
   },
 
-  getCurrentUserWithTeams: async (userId: string): Promise<GetCurrentUserWithTeamsResult> => {
+  getCurrentUserWithTeams: async (userId: string): Promise<ServiceResult<UserWithTeams>> => {
     const user = await userRepository.findByIdWithTeams(userId);
     if (!user) {
       return { success: false, message: "ユーザーが見つかりません", status: 404 };

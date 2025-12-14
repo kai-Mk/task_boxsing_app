@@ -1,11 +1,20 @@
 import { NextResponse } from "next/server";
-import { registerSchema } from "@/lib/validators/auth";
-import { userService } from "@/server/user/user.service";
+import { createTeamSchema } from "@/lib/validators/team";
+import { teamService } from "@/server/team/team.service";
+import { getCurrentUser } from "@/server/auth/getCurrentUser";
 
 export const POST = async (req: Request) => {
   try {
+    const user = await getCurrentUser();
+    if (!user?.id) {
+      return NextResponse.json(
+        { success: false, message: "認証が必要です" },
+        { status: 401 }
+      );
+    }
+
     const body = await req.json();
-    const parsed = registerSchema.safeParse(body);
+    const parsed = createTeamSchema.safeParse(body);
 
     if (!parsed.success) {
       return NextResponse.json(
@@ -14,9 +23,13 @@ export const POST = async (req: Request) => {
       );
     }
 
-    const { name, email, password } = parsed.data;
+    const { name, description } = parsed.data;
 
-    const result = await userService.register({ name, email, password });
+    const result = await teamService.create({
+      name,
+      description,
+      ownerId: user.id,
+    });
 
     if (!result.success) {
       return NextResponse.json(
@@ -27,7 +40,7 @@ export const POST = async (req: Request) => {
 
     return NextResponse.json({ success: true, data: result.data });
   } catch (error) {
-    console.error("POST /api/auth/register error:", error);
+    console.error("POST /api/teams error:", error);
     return NextResponse.json(
       { success: false, message: "サーバーエラーが発生しました" },
       { status: 500 }
