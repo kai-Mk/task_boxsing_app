@@ -21,6 +21,7 @@ model User {
   lastSelectedTeamId String?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
+  deletedAt          DateTime? // soft delete
 
   // Relations
   accounts              Account[]
@@ -71,11 +72,12 @@ model Team {
 }
 
 model TeamMember {
-  id        String   @id @default(nanoid())
+  id        String    @id @default(nanoid())
   teamId    String
   userId    String
-  role      TeamRole @default(MEMBER)
-  createdAt DateTime @default(now())
+  role      TeamRole  @default(MEMBER)
+  createdAt DateTime  @default(now())
+  deletedAt DateTime? // soft delete
 
   // Relations
   team      Team                     @relation(fields: [teamId], references: [id], onDelete: Cascade)
@@ -127,6 +129,7 @@ model Task {
   mtgAvailability MtgAvailability   @default(AVAILABLE)
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
+  deletedAt       DateTime?         // soft delete
 
   // Relations
   teamMember TeamMember @relation(fields: [teamMemberId], references: [id], onDelete: Cascade)
@@ -150,6 +153,7 @@ model MeetingRequest {
   canceledAt      DateTime?
   createdAt       DateTime              @default(now())
   updatedAt       DateTime              @updatedAt
+  deletedAt       DateTime?             // soft delete
 
   // Relations
   team      Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
@@ -169,6 +173,7 @@ model TeamInvitation {
   createdByUserId String
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime? // soft delete
 
   // Relations
   team      Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
