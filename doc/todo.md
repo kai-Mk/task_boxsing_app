@@ -55,11 +55,16 @@ MVP 機能を実装するための作業リスト。
 
 ### 2-1. チーム作成
 
-- [ ] チーム作成ページ (`app/(app)/teams/new/page.tsx`)  ← `/teams/new`
-- [ ] チーム作成フォーム（名前・説明）
-- [ ] Team Repository / Service 作成
-- [ ] チーム作成 API
-- [ ] 作成時に TeamMember (ADMIN) 自動追加
+- [x] チーム作成ページ (`app/(app)/teams/new/page.tsx`) ← `/teams/new`
+- [x] チーム作成フォーム（名前・説明）
+- [x] Team Repository / Service 作成
+- [x] チーム作成 API
+- [x] 作成時に TeamMember (ADMIN) 自動追加
+- [x] 共通Result型 (`types/server/result.ts`)
+- [x] TextAreaコンポーネント
+- [x] アプリ用レイアウト・ヘッダー作成
+- [x] Buttonにloading状態追加
+- [x] Input/TextAreaにrequired・hint追加
 
 ### 2-2. チーム選択・切り替え
 
