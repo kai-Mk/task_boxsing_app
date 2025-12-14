@@ -64,7 +64,7 @@ model Team {
 
   // Relations
   owner            User             @relation("TeamOwner", fields: [ownerId], references: [id])
-  members          TeamMember[]
+  teamMembers      TeamMember[]
   tasks            Task[]
   meetingRequests  MeetingRequest[]
   invitations      TeamInvitation[]

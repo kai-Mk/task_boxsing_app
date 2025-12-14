@@ -8,7 +8,7 @@ export const teamRepository = {
         name: data.name,
         description: data.description,
         ownerId: data.ownerId,
-        members: {
+        teamMembers: {
           create: {
             userId: data.ownerId,
             role: TeamRole.ADMIN,
