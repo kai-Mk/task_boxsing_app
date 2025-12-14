@@ -26,7 +26,6 @@ model User {
   accounts              Account[]
   teamMembers           TeamMember[]
   ownedTeams            Team[]           @relation("TeamOwner")
-  tasks                 Task[]
   sentMeetingRequests   MeetingRequest[] @relation("MeetingRequester")
   receivedMeetingRequests MeetingRequest[] @relation("MeetingTarget")
   createdInvitations    TeamInvitation[]
@@ -65,7 +64,6 @@ model Team {
   // Relations
   owner            User             @relation("TeamOwner", fields: [ownerId], references: [id])
   teamMembers      TeamMember[]
-  tasks            Task[]
   meetingRequests  MeetingRequest[]
   invitations      TeamInvitation[]
 
@@ -83,6 +81,7 @@ model TeamMember {
   team      Team                     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   user      User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
   positions TeamMemberPosition[]
+  tasks     Task[]
 
   @@unique([teamId, userId])
   @@map("team_members")
@@ -116,13 +115,12 @@ model TeamMemberPosition {
 
 model Task {
   id              String            @id @default(nanoid())
-  teamId          String
-  userId          String
+  teamMemberId    String
   date            DateTime          @db.Date
   title           String
   description     String?
-  startTime       String            // "09:00", "14:30", etc. (HH:mm format)
-  endTime         String            // "10:00", "15:45", etc. (HH:mm format)
+  startTime       Int               // minutes from midnight (e.g., 540 = 09:00)
+  endTime         Int               // minutes from midnight (e.g., 600 = 10:00)
   type            TaskType          @default(WORK)
   status          TaskStatus        @default(TODO)
   color           TaskColor         @default(BLUE)
@@ -131,8 +129,7 @@ model Task {
   updatedAt       DateTime          @updatedAt
 
   // Relations
-  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  teamMember TeamMember @relation(fields: [teamMemberId], references: [id], onDelete: Cascade)
 
   @@map("tasks")
 }
@@ -143,8 +140,8 @@ model MeetingRequest {
   requesterId     String
   targetId        String
   date            DateTime              @db.Date
-  startTime       String                // "14:00", etc.
-  endTime         String                // "15:00", etc.
+  startTime       Int                   // minutes from midnight (e.g., 840 = 14:00)
+  endTime         Int                   // minutes from midnight (e.g., 900 = 15:00)
   requestMessage  String
   responseMessage String?
   cancelMessage   String?
