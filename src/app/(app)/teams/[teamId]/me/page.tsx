@@ -3,10 +3,15 @@ import { getAuthenticatedUser } from "@/server/auth/getCurrentUser";
 import { teamMemberService } from "@/server/teamMember/teamMember.service";
 import { taskService } from "@/server/task/task.service";
 import { getTodayUTC } from "@/lib/utils/date";
+import TasksPage from "@/features/tasks/components/TasksPage";
+import { MOCK_TASKS } from "@/features/tasks/mocks/taskMocks";
 
 type Props = {
   params: Promise<{ teamId: string }>;
 };
+
+// モック表示切り替えフラグ（開発用）
+const USE_MOCK = true;
 
 const MyTasksPage = async ({ params }: Props) => {
   const user = await getAuthenticatedUser();
@@ -17,19 +22,22 @@ const MyTasksPage = async ({ params }: Props) => {
   if (!teamMemberResult.success) {
     redirect("/teams/new");
   }
-  const teamMember = teamMemberResult.data;
 
-  // 今日の日付でタスク取得
   const today = getTodayUTC();
-  const tasksResult = await taskService.getByTeamMemberAndDate(teamMember.id, today);
-  const tasks = tasksResult.success ? tasksResult.data : [];
+
+  // モック or 実データ
+  let tasks;
+  if (USE_MOCK) {
+    tasks = MOCK_TASKS;
+  } else {
+    const teamMember = teamMemberResult.data;
+    const tasksResult = await taskService.getByTeamMemberAndDate(teamMember.id, today);
+    tasks = tasksResult.success ? tasksResult.data : [];
+  }
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold">マイタスク</h1>
-      <p className="text-gray-600 mt-2">チームID: {teamId}</p>
-      <p className="text-gray-600">タスク数: {tasks.length}</p>
-      {/* TODO: TasksPageコンポーネントに置き換え */}
+    <div className="h-[calc(100vh-64px)] p-6">
+      <TasksPage initialTasks={tasks} initialDate={today} teamId={teamId} />
     </div>
   );
 };
