@@ -40,8 +40,8 @@ export const taskRepository = {
   },
 
   findById: async (id: string) => {
-    return prisma.task.findUnique({
-      where: { id },
+    return prisma.task.findFirst({
+      where: { id, deletedAt: null },
     });
   },
 

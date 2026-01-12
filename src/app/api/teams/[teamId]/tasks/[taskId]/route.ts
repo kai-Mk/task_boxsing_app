@@ -35,7 +35,7 @@ export const DELETE = async (_req: Request, { params }: Props) => {
       );
     }
 
-    const result = await taskService.delete(taskId, teamMember.id);
+    const result = await taskService.delete(taskId);
 
     if (!result.success) {
       return NextResponse.json(
@@ -91,7 +91,7 @@ export const PUT = async (req: Request, { params }: Props) => {
       );
     }
 
-    const result = await taskService.update(taskId, teamMember.id, {
+    const result = await taskService.update(taskId, {
       ...parsed.data,
       description: parsed.data.description || undefined,
     });

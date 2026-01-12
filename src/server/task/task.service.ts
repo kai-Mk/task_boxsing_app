@@ -40,30 +40,11 @@ export const taskService = {
     return { success: true, data: tasks };
   },
 
-  delete: async (
-    taskId: string,
-    teamMemberId: string
-  ): Promise<ServiceResult<Task>> => {
+  delete: async (taskId: string): Promise<ServiceResult<Task>> => {
     const task = await taskRepository.findById(taskId);
 
     if (!task) {
       return { success: false, message: "タスクが見つかりません", status: 404 };
-    }
-
-    if (task.teamMemberId !== teamMemberId) {
-      return {
-        success: false,
-        message: "このタスクを削除する権限がありません",
-        status: 403,
-      };
-    }
-
-    if (task.deletedAt) {
-      return {
-        success: false,
-        message: "タスクは既に削除されています",
-        status: 400,
-      };
     }
 
     const deletedTask = await taskRepository.softDelete(taskId);
@@ -72,7 +53,6 @@ export const taskService = {
 
   update: async (
     taskId: string,
-    teamMemberId: string,
     data: {
       title: string;
       description?: string;
@@ -87,22 +67,6 @@ export const taskService = {
 
     if (!task) {
       return { success: false, message: "タスクが見つかりません", status: 404 };
-    }
-
-    if (task.teamMemberId !== teamMemberId) {
-      return {
-        success: false,
-        message: "このタスクを更新する権限がありません",
-        status: 403,
-      };
-    }
-
-    if (task.deletedAt) {
-      return {
-        success: false,
-        message: "削除されたタスクは更新できません",
-        status: 400,
-      };
     }
 
     const updatedTask = await taskRepository.update(taskId, {
