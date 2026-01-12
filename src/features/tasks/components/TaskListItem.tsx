@@ -1,20 +1,15 @@
 "use client";
 
-import { Task, MtgAvailability } from "@prisma/client";
+import { Task } from "@prisma/client";
 import { Check } from "lucide-react";
+import { minutesToTime } from "@/lib/utils/date";
+import { getColorClass } from "../utils/taskList";
 import MtgBadge from "./MtgBadge";
 
 type Props = {
   task: Task;
   onToggleStatus?: (taskId: string) => void;
   onClick?: (task: Task) => void;
-};
-
-// 分を "HH:mm" 形式に変換
-const formatTime = (minutes: number): string => {
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-  return `${hours.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}`;
 };
 
 const TaskListItem = ({ task, onToggleStatus, onClick }: Props) => {
@@ -71,11 +66,9 @@ const TaskListItem = ({ task, onToggleStatus, onClick }: Props) => {
 
         <div className="flex items-center gap-2 mt-1">
           <span className="text-sm text-gray-500">
-            {formatTime(task.startTime)} - {formatTime(task.endTime)}
+            {minutesToTime(task.startTime)} - {minutesToTime(task.endTime)}
           </span>
-          {task.mtgAvailability !== MtgAvailability.UNAVAILABLE && (
-            <MtgBadge availability={task.mtgAvailability} size="sm" />
-          )}
+          <MtgBadge availability={task.mtgAvailability} size="sm" />
         </div>
       </div>
 
@@ -88,21 +81,6 @@ const TaskListItem = ({ task, onToggleStatus, onClick }: Props) => {
       />
     </div>
   );
-};
-
-// TaskColor から Tailwind クラスを取得
-const getColorClass = (color: string): string => {
-  const colorMap: Record<string, string> = {
-    RED: "bg-red-400",
-    ORANGE: "bg-orange-400",
-    YELLOW: "bg-yellow-400",
-    GREEN: "bg-green-400",
-    BLUE: "bg-blue-400",
-    PURPLE: "bg-purple-400",
-    PINK: "bg-pink-400",
-    GRAY: "bg-gray-400",
-  };
-  return colorMap[color] || "bg-gray-400";
 };
 
 export default TaskListItem;

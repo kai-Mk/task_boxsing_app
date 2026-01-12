@@ -1,6 +1,6 @@
 "use client";
 
-import { Task, MtgAvailability } from "@prisma/client";
+import { Task } from "@prisma/client";
 import MtgBadge from "./MtgBadge";
 
 type Props = {
@@ -79,8 +79,8 @@ const TimelineBlock = ({ task, startHour, hourHeight, onClick }: Props) => {
           )}
         </div>
 
-        {/* MTGバッジ（UNAVAILABLEは表示しない） */}
-        {!isCompact && task.mtgAvailability !== MtgAvailability.UNAVAILABLE && (
+        {/* MTGバッジ */}
+        {!isCompact && (
           <MtgBadge availability={task.mtgAvailability} size="sm" />
         )}
       </div>

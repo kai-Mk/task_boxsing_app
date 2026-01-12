@@ -19,3 +19,14 @@ export const timeToMinutes = (time: string): number => {
   const dt = DateTime.fromFormat(time, "HH:mm");
   return dt.hour * 60 + dt.minute;
 };
+
+/**
+ * 0時からの分数を "HH:mm" 形式の時刻文字列に変換
+ * @example minutesToTime(540) => "09:00"
+ */
+export const minutesToTime = (minutes: number): string => {
+  return DateTime.fromObject({
+    hour: Math.floor(minutes / 60),
+    minute: minutes % 60,
+  }).toFormat("HH:mm");
+};
