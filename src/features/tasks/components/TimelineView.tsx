@@ -12,8 +12,8 @@ type Props = {
 
 // タイムライン表示設定
 const TIMELINE_CONFIG = {
-  startHour: 8,   // 8:00 から
-  endHour: 22,    // 22:00 まで
+  startHour: 8, // 8:00 から
+  endHour: 22, // 22:00 まで
   hourHeight: 60, // 1時間あたりの高さ（px）
 } as const;
 
@@ -50,7 +50,7 @@ const TimelineView = ({ tasks, onTaskClick }: Props) => {
           ))}
 
           {/* タスクブロック */}
-          {calculateTaskLayout(tasks).map((task) => (
+          {calculateTaskLayout(tasks).map(task => (
             <TimelineBlock
               key={task.id}
               task={task}

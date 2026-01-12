@@ -7,9 +7,16 @@ export const teamMemberService = {
     teamId: string,
     userId: string
   ): Promise<ServiceResult<TeamMember>> => {
-    const teamMember = await teamMemberRepository.findByTeamAndUser(teamId, userId);
+    const teamMember = await teamMemberRepository.findByTeamAndUser(
+      teamId,
+      userId
+    );
     if (!teamMember) {
-      return { success: false, message: "チームに所属していません", status: 403 };
+      return {
+        success: false,
+        message: "チームに所属していません",
+        status: 403,
+      };
     }
     return { success: true, data: teamMember };
   },

@@ -48,7 +48,10 @@ export const GET = async (req: Request, { params }: Props) => {
 
     const date = new Date(dateStr);
 
-    const result = await taskService.getByTeamMemberAndDate(teamMember.id, date);
+    const result = await taskService.getByTeamMemberAndDate(
+      teamMember.id,
+      date
+    );
 
     if (!result.success) {
       return NextResponse.json(

@@ -1,7 +1,16 @@
 import { z } from "zod";
 
 const TaskTypeEnum = z.enum(["WORK", "BREAK"]);
-const TaskColorEnum = z.enum(["RED", "ORANGE", "YELLOW", "GREEN", "BLUE", "PURPLE", "PINK", "GRAY"]);
+const TaskColorEnum = z.enum([
+  "RED",
+  "ORANGE",
+  "YELLOW",
+  "GREEN",
+  "BLUE",
+  "PURPLE",
+  "PINK",
+  "GRAY",
+]);
 const MtgAvailabilityEnum = z.enum(["AVAILABLE", "CHAT_ONLY", "UNAVAILABLE"]);
 
 export const createTaskSchema = z
@@ -20,17 +29,17 @@ export const createTaskSchema = z
       .number()
       .min(0, "開始時間が不正です")
       .max(1439, "開始時間が不正です")
-      .refine((v) => v % 15 === 0, "15分単位で入力してください"),
+      .refine(v => v % 15 === 0, "15分単位で入力してください"),
     endTime: z
       .number()
       .min(0, "終了時間が不正です")
       .max(1440, "終了時間が不正です")
-      .refine((v) => v % 15 === 0, "15分単位で入力してください"),
+      .refine(v => v % 15 === 0, "15分単位で入力してください"),
     type: TaskTypeEnum,
     color: TaskColorEnum,
     mtgAvailability: MtgAvailabilityEnum,
   })
-  .refine((data) => data.startTime < data.endTime, {
+  .refine(data => data.startTime < data.endTime, {
     message: "終了時間は開始時間より後にしてください",
     path: ["endTime"],
   });

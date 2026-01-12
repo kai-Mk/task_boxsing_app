@@ -69,7 +69,11 @@ const CreateTeamForm = () => {
             error={errors.description?.message}
           />
 
-          <Button type="submit" label={isLoading ? "作成中..." : "作成する"} loading={isLoading} />
+          <Button
+            type="submit"
+            label={isLoading ? "作成中..." : "作成する"}
+            loading={isLoading}
+          />
         </form>
       </div>
     </div>

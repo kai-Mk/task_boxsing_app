@@ -29,7 +29,12 @@ const MTG_OPTIONS = [
   { value: "UNAVAILABLE", label: "対応不可" },
 ];
 
-const TaskFormModal = ({ isOpen, onClose, onSubmit, isSubmitting = false }: Props) => {
+const TaskFormModal = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  isSubmitting = false,
+}: Props) => {
   const {
     register,
     handleSubmit,
@@ -71,7 +76,9 @@ const TaskFormModal = ({ isOpen, onClose, onSubmit, isSubmitting = false }: Prop
         <Input
           label="タイトル"
           type="text"
-          register={register("title", { required: "タイトルを入力してください" })}
+          register={register("title", {
+            required: "タイトルを入力してください",
+          })}
           error={errors.title?.message}
           required
         />

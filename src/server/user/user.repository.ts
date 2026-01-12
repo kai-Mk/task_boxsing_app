@@ -1,7 +1,11 @@
 import { prisma } from "@/server/db";
 
 export const userRepository = {
-  create: async (data: { name: string; email: string; passwordHash: string }) => {
+  create: async (data: {
+    name: string;
+    email: string;
+    passwordHash: string;
+  }) => {
     return prisma.user.create({
       data: {
         name: data.name,

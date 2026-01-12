@@ -32,7 +32,9 @@ const RadioGroup = ({
       <div className="flex items-baseline gap-2 mb-2">
         <label className="text-sm font-medium text-gray-700">{label}</label>
         {required && (
-          <span className="text-xs text-white bg-red-500 px-1.5 py-0.5 rounded">必須</span>
+          <span className="text-xs text-white bg-red-500 px-1.5 py-0.5 rounded">
+            必須
+          </span>
         )}
         {hint && <span className="text-sm text-gray-500">{hint}</span>}
       </div>
@@ -42,7 +44,7 @@ const RadioGroup = ({
           ${direction === "vertical" ? "flex-col" : "flex-row flex-wrap"}
         `}
       >
-        {options.map((option) => (
+        {options.map(option => (
           <label
             key={option.value}
             className="flex items-center gap-2 cursor-pointer"

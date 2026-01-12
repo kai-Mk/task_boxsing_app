@@ -14,14 +14,20 @@ const MyTasksPage = async ({ params }: Props) => {
   const { teamId } = await params;
 
   // TeamMemberを取得
-  const teamMemberResult = await teamMemberService.getByTeamAndUser(teamId, user.id);
+  const teamMemberResult = await teamMemberService.getByTeamAndUser(
+    teamId,
+    user.id
+  );
   if (!teamMemberResult.success) {
     redirect("/teams/new");
   }
 
   const today = getTodayUTC();
   const teamMember = teamMemberResult.data;
-  const tasksResult = await taskService.getByTeamMemberAndDate(teamMember.id, today);
+  const tasksResult = await taskService.getByTeamMemberAndDate(
+    teamMember.id,
+    today
+  );
   const tasks = tasksResult.success ? tasksResult.data : [];
 
   return (

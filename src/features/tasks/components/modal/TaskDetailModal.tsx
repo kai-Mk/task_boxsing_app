@@ -21,7 +21,13 @@ const TYPE_LABELS: Record<string, string> = {
   BREAK: "休憩",
 };
 
-const TaskDetailModal = ({ task, isOpen, onClose, onEdit, onDelete }: Props) => {
+const TaskDetailModal = ({
+  task,
+  isOpen,
+  onClose,
+  onEdit,
+  onDelete,
+}: Props) => {
   if (!task) return null;
 
   const handleEdit = () => {
@@ -38,10 +44,14 @@ const TaskDetailModal = ({ task, isOpen, onClose, onEdit, onDelete }: Props) => 
       <div className="space-y-4">
         {/* タイトル & カラー */}
         <div className="flex items-start gap-3">
-          <div className={`w-3 h-3 rounded-full mt-1.5 shrink-0 ${getColorClass(task.color)}`} />
+          <div
+            className={`w-3 h-3 rounded-full mt-1.5 shrink-0 ${getColorClass(task.color)}`}
+          />
           <div className="flex-1">
             <h3 className="text-lg font-bold text-gray-800">{task.title}</h3>
-            <span className="text-sm text-gray-500">{TYPE_LABELS[task.type]}</span>
+            <span className="text-sm text-gray-500">
+              {TYPE_LABELS[task.type]}
+            </span>
           </div>
         </div>
 
@@ -87,11 +97,7 @@ const TaskDetailModal = ({ task, isOpen, onClose, onEdit, onDelete }: Props) => 
             fullWidth={false}
             onClick={handleDelete}
           />
-          <Button
-            label="編集"
-            fullWidth={false}
-            onClick={handleEdit}
-          />
+          <Button label="編集" fullWidth={false} onClick={handleEdit} />
         </div>
       </div>
     </Modal>

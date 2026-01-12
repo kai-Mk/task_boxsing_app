@@ -39,10 +39,16 @@ export const userService = {
     };
   },
 
-  getCurrentUserWithTeams: async (userId: string): Promise<ServiceResult<UserWithTeams>> => {
+  getCurrentUserWithTeams: async (
+    userId: string
+  ): Promise<ServiceResult<UserWithTeams>> => {
     const user = await userRepository.findByIdWithTeams(userId);
     if (!user) {
-      return { success: false, message: "ユーザーが見つかりません", status: 404 };
+      return {
+        success: false,
+        message: "ユーザーが見つかりません",
+        status: 404,
+      };
     }
     return { success: true, data: user };
   },

@@ -35,10 +35,7 @@ export const taskRepository = {
         date,
         deletedAt: null,
       },
-      orderBy: [
-        { startTime: "asc" },
-        { id: "asc" },
-      ],
+      orderBy: [{ startTime: "asc" }, { id: "asc" }],
     });
   },
 

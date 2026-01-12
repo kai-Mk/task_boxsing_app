@@ -33,7 +33,10 @@ export const taskService = {
     teamMemberId: string,
     date: Date
   ): Promise<ServiceResult<Task[]>> => {
-    const tasks = await taskRepository.findByTeamMemberAndDate(teamMemberId, date);
+    const tasks = await taskRepository.findByTeamMemberAndDate(
+      teamMemberId,
+      date
+    );
     return { success: true, data: tasks };
   },
 
@@ -48,11 +51,19 @@ export const taskService = {
     }
 
     if (task.teamMemberId !== teamMemberId) {
-      return { success: false, message: "このタスクを削除する権限がありません", status: 403 };
+      return {
+        success: false,
+        message: "このタスクを削除する権限がありません",
+        status: 403,
+      };
     }
 
     if (task.deletedAt) {
-      return { success: false, message: "タスクは既に削除されています", status: 400 };
+      return {
+        success: false,
+        message: "タスクは既に削除されています",
+        status: 400,
+      };
     }
 
     const deletedTask = await taskRepository.softDelete(taskId);

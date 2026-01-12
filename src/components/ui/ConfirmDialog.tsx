@@ -25,7 +25,10 @@ const ConfirmDialog = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="fixed inset-0 bg-black/50 animate-fade-in" onClick={onCancel} />
+      <div
+        className="fixed inset-0 bg-black/50 animate-fade-in"
+        onClick={onCancel}
+      />
       <div className="relative bg-white rounded-xl p-6 w-full max-w-sm shadow-xl animate-scale-in">
         <h2 className="text-lg font-bold text-gray-800 mb-2">{title}</h2>
         <p className="text-gray-600 mb-6">{message}</p>

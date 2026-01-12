@@ -33,11 +33,13 @@ const ColorPicker = ({
       <div className="flex items-baseline gap-2 mb-2">
         <label className="text-sm font-medium text-gray-700">{label}</label>
         {required && (
-          <span className="text-xs text-white bg-red-500 px-1.5 py-0.5 rounded">必須</span>
+          <span className="text-xs text-white bg-red-500 px-1.5 py-0.5 rounded">
+            必須
+          </span>
         )}
       </div>
       <div className="flex gap-2 flex-wrap">
-        {COLOR_OPTIONS.map((color) => (
+        {COLOR_OPTIONS.map(color => (
           <button
             key={color.value}
             type="button"

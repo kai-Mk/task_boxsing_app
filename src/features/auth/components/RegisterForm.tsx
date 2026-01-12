@@ -93,7 +93,11 @@ const RegisterForm = () => {
             error={errors.confirmPassword?.message}
           />
 
-          <Button type="submit" label={isLoading ? "登録中..." : "登録する"} loading={isLoading} />
+          <Button
+            type="submit"
+            label={isLoading ? "登録中..." : "登録する"}
+            loading={isLoading}
+          />
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-600">

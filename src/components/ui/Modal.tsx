@@ -16,7 +16,13 @@ const SIZE_CLASSES = {
   lg: "max-w-lg",
 } as const;
 
-const Modal = ({ isOpen, onClose, title, children, size = "md" }: ModalProps) => {
+const Modal = ({
+  isOpen,
+  onClose,
+  title,
+  children,
+  size = "md",
+}: ModalProps) => {
   if (!isOpen) return null;
 
   return (
