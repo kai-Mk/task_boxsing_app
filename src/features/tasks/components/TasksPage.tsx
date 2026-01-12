@@ -5,6 +5,7 @@ import { Task } from "@prisma/client";
 import DatePicker from "./DatePicker";
 import TaskList from "./TaskList";
 import TimelineView from "./TimelineView";
+import TaskFormModal from "./TaskFormModal";
 
 type Props = {
   initialTasks: Task[];
@@ -15,6 +16,7 @@ type Props = {
 const TasksPage = ({ initialTasks, initialDate, teamId }: Props) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   // 日付変更時（TODO: API呼び出しに置き換え）
   const handleDateChange = (date: Date) => {
@@ -43,8 +45,12 @@ const TasksPage = ({ initialTasks, initialDate, teamId }: Props) => {
 
   // タスク追加ボタン
   const handleAddClick = () => {
-    console.log("Add task clicked");
-    // TODO: 追加モーダルを開く
+    setIsAddModalOpen(true);
+  };
+
+  // モーダルを閉じる
+  const handleCloseModal = () => {
+    setIsAddModalOpen(false);
   };
 
   return (
@@ -71,6 +77,9 @@ const TasksPage = ({ initialTasks, initialDate, teamId }: Props) => {
           <TimelineView tasks={tasks} onTaskClick={handleTaskClick} />
         </div>
       </div>
+
+      {/* タスク追加モーダル */}
+      <TaskFormModal isOpen={isAddModalOpen} onClose={handleCloseModal} />
     </div>
   );
 };

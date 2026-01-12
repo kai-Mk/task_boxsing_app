@@ -39,11 +39,12 @@ const TaskListItem = ({ task, onToggleStatus, onClick }: Props) => {
       <button
         onClick={handleCheckboxClick}
         className={`
-          flex-shrink-0 w-5 h-5 mt-0.5 rounded border-2 flex items-center justify-center
+          shrink-0 w-5 h-5 mt-0.5 rounded border-2 flex items-center justify-center
           transition
-          ${isDone
-            ? "bg-green-500 border-green-500 text-white"
-            : "border-gray-300 hover:border-gray-400"
+          ${
+            isDone
+              ? "bg-green-500 border-green-500 text-white"
+              : "border-gray-300 hover:border-gray-400"
           }
         `}
       >
@@ -81,7 +82,7 @@ const TaskListItem = ({ task, onToggleStatus, onClick }: Props) => {
       {/* カラーインジケーター */}
       <div
         className={`
-          flex-shrink-0 w-2 h-full min-h-[40px] rounded-full
+          shrink-0 w-2 h-full min-h-10 rounded-full
           ${getColorClass(task.color)}
         `}
       />
