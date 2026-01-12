@@ -11,12 +11,17 @@ type Props = {
   onAddClick?: () => void;
 };
 
-const TaskList = ({ tasks, onToggleStatus, onTaskClick, onAddClick }: Props) => {
+const TaskList = ({
+  tasks,
+  onToggleStatus,
+  onTaskClick,
+  onAddClick,
+}: Props) => {
   // 開始時刻でソート
   const sortedTasks = [...tasks].sort((a, b) => a.startTime - b.startTime);
 
-  const todoTasks = sortedTasks.filter((t) => t.status === "TODO");
-  const doneTasks = sortedTasks.filter((t) => t.status === "DONE");
+  const todoTasks = sortedTasks.filter(t => t.status === "TODO");
+  const doneTasks = sortedTasks.filter(t => t.status === "DONE");
 
   return (
     <div className="flex flex-col h-full">
@@ -31,12 +36,14 @@ const TaskList = ({ tasks, onToggleStatus, onTaskClick, onAddClick }: Props) => 
         {sortedTasks.length === 0 ? (
           <div className="text-center py-8 text-gray-400">
             <p>タスクがありません</p>
-            <p className="text-sm mt-1">「+ 追加」ボタンで作成しましょう</p>
+            <p className="text-sm mt-1">
+              「タスクを追加」ボタンで作成しましょう
+            </p>
           </div>
         ) : (
           <>
             {/* 未完了タスク */}
-            {todoTasks.map((task) => (
+            {todoTasks.map(task => (
               <TaskListItem
                 key={task.id}
                 task={task}
@@ -49,7 +56,7 @@ const TaskList = ({ tasks, onToggleStatus, onTaskClick, onAddClick }: Props) => 
             {doneTasks.length > 0 && todoTasks.length > 0 && (
               <div className="border-t border-gray-200 my-3" />
             )}
-            {doneTasks.map((task) => (
+            {doneTasks.map(task => (
               <TaskListItem
                 key={task.id}
                 task={task}

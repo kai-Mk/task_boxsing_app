@@ -1,0 +1,105 @@
+import { useState, useCallback } from "react";
+import { Task } from "@prisma/client";
+import { taskService } from "../services/taskService";
+import { TaskFormData } from "../types";
+
+type ToastState = {
+  message: string;
+  type: "success" | "error";
+} | null;
+
+type UseTasksReturn = {
+  tasks: Task[];
+  selectedDate: Date;
+  isLoading: boolean;
+  toast: ToastState;
+  changeDate: (date: Date) => Promise<void>;
+  addTask: (formData: TaskFormData) => Promise<boolean>;
+  toggleStatus: (taskId: string) => void;
+  clearToast: () => void;
+};
+
+export const useTasks = (
+  teamId: string,
+  initialTasks: Task[],
+  initialDate: Date
+): UseTasksReturn => {
+  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
+  const [isLoading, setIsLoading] = useState(false);
+  const [toast, setToast] = useState<ToastState>(null);
+
+  // 日付変更
+  const changeDate = useCallback(async (date: Date) => {
+    setSelectedDate(date);
+    setIsLoading(true);
+
+    try {
+      const result = await taskService.getByDate(teamId, date);
+
+      if (!result.success) {
+        setToast({ message: result.message, type: "error" });
+        return;
+      }
+
+      setTasks(result.data);
+    } catch (error) {
+      console.error("タスク取得エラー:", error);
+      setToast({ message: "タスクの取得に失敗しました", type: "error" });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [teamId]);
+
+  // タスク追加
+  const addTask = useCallback(async (formData: TaskFormData): Promise<boolean> => {
+    setIsLoading(true);
+
+    try {
+      const result = await taskService.create(teamId, formData, selectedDate);
+
+      if (!result.success) {
+        setToast({ message: result.message, type: "error" });
+        return false;
+      }
+
+      setTasks((prev) => [...prev, result.data]);
+      setToast({ message: "タスクを追加しました", type: "success" });
+      return true;
+    } catch (error) {
+      console.error("タスク作成エラー:", error);
+      setToast({ message: "タスクの作成に失敗しました", type: "error" });
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [teamId, selectedDate]);
+
+  // ステータストグル（楽観的更新）
+  const toggleStatus = useCallback((taskId: string) => {
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === taskId
+          ? { ...task, status: task.status === "TODO" ? "DONE" : "TODO" }
+          : task
+      )
+    );
+    // TODO: API呼び出し（バックグラウンドで実行）
+  }, []);
+
+  // Toast消去
+  const clearToast = useCallback(() => {
+    setToast(null);
+  }, []);
+
+  return {
+    tasks,
+    selectedDate,
+    isLoading,
+    toast,
+    changeDate,
+    addTask,
+    toggleStatus,
+    clearToast,
+  };
+};
