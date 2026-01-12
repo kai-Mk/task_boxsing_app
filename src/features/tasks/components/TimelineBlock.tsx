@@ -68,7 +68,7 @@ const TimelineBlock = ({ task, startHour, hourHeight, onClick }: Props) => {
               {task.title}
             </span>
             {isBreak && (
-              <span className="text-xs opacity-60 flex-shrink-0">休憩</span>
+              <span className="text-xs opacity-60 shrink-0">休憩</span>
             )}
           </div>
 
