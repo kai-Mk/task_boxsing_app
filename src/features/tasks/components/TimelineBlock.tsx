@@ -7,6 +7,8 @@ type Props = {
   task: Task;
   startHour: number;
   hourHeight: number;
+  columnIndex?: number;
+  totalColumns?: number;
   onClick?: (task: Task) => void;
 };
 
@@ -29,7 +31,17 @@ const getColorClasses = (color: string, isDone: boolean): string => {
   return colorMap[color] || colorMap.GRAY;
 };
 
-const TimelineBlock = ({ task, startHour, hourHeight, onClick }: Props) => {
+const TIMELINE_LEFT_PADDING = 56; // 時刻ラベルの幅（14 * 4 = 56px）
+const TIMELINE_RIGHT_PADDING = 8; // 右側の余白
+
+const TimelineBlock = ({
+  task,
+  startHour,
+  hourHeight,
+  columnIndex = 0,
+  totalColumns = 1,
+  onClick,
+}: Props) => {
   const startMinutes = startHour * 60;
   const topPosition = ((task.startTime - startMinutes) / 60) * hourHeight;
   const height = ((task.endTime - task.startTime) / 60) * hourHeight;
@@ -41,11 +53,15 @@ const TimelineBlock = ({ task, startHour, hourHeight, onClick }: Props) => {
   // 高さが小さい場合は表示を省略
   const isCompact = height < 50;
 
+  // 列の幅と位置を計算
+  const columnWidth = `calc((100% - ${TIMELINE_LEFT_PADDING}px - ${TIMELINE_RIGHT_PADDING}px) / ${totalColumns})`;
+  const leftPosition = `calc(${TIMELINE_LEFT_PADDING}px + (100% - ${TIMELINE_LEFT_PADDING}px - ${TIMELINE_RIGHT_PADDING}px) * ${columnIndex} / ${totalColumns})`;
+
   return (
     <div
       onClick={() => onClick?.(task)}
       className={`
-        absolute left-16 right-2 rounded-lg border-l-4 px-3 py-1.5
+        absolute rounded-lg border-l-4 px-2 py-1.5
         cursor-pointer transition hover:shadow-md overflow-hidden
         ${colorClasses}
         ${isDone ? "opacity-60" : ""}
@@ -54,6 +70,8 @@ const TimelineBlock = ({ task, startHour, hourHeight, onClick }: Props) => {
         top: `${topPosition}px`,
         height: `${height}px`,
         minHeight: "24px",
+        left: leftPosition,
+        width: columnWidth,
       }}
     >
       <div className="flex items-start justify-between gap-2 h-full">

@@ -1,6 +1,7 @@
 "use client";
 
 import { Task } from "@prisma/client";
+import { calculateTaskLayout } from "../utils/timeLine";
 import TimelineBlock from "./TimelineBlock";
 import CurrentTimeLine from "./CurrentTimeLine";
 
@@ -49,12 +50,14 @@ const TimelineView = ({ tasks, onTaskClick }: Props) => {
           ))}
 
           {/* タスクブロック */}
-          {tasks.map((task) => (
+          {calculateTaskLayout(tasks).map((task) => (
             <TimelineBlock
               key={task.id}
               task={task}
               startHour={startHour}
               hourHeight={hourHeight}
+              columnIndex={task.columnIndex}
+              totalColumns={task.totalColumns}
               onClick={onTaskClick}
             />
           ))}
