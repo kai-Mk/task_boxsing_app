@@ -2,6 +2,7 @@
 
 import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 import { DateTime } from "luxon";
+import { isToday } from "@/lib/utils/date";
 
 type Props = {
   date: Date;
@@ -10,7 +11,7 @@ type Props = {
 
 const DatePicker = ({ date, onDateChange }: Props) => {
   const dt = DateTime.fromJSDate(date);
-  const isToday = dt.hasSame(DateTime.now(), "day");
+  const isTodaySelected = isToday(date);
 
   const handlePrev = () => {
     onDateChange(dt.minus({ days: 1 }).toJSDate());
@@ -57,7 +58,7 @@ const DatePicker = ({ date, onDateChange }: Props) => {
         </button>
       </div>
 
-      {!isToday && (
+      {!isTodaySelected && (
         <button
           onClick={handleToday}
           className="text-sm text-blue-600 hover:text-blue-800 hover:underline"

@@ -26,3 +26,12 @@ export const minutesToTime = (minutes: number): string => {
     minute: minutes % 60,
   }).toFormat("HH:mm");
 };
+
+/**
+ * 指定した日付が今日かどうかを判定
+ */
+export const isToday = (date: Date): boolean => {
+  return DateTime.fromJSDate(date)
+    .setZone("Asia/Tokyo")
+    .hasSame(DateTime.now().setZone("Asia/Tokyo"), "day");
+};

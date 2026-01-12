@@ -1,12 +1,14 @@
 "use client";
 
 import { Task } from "@prisma/client";
+import { isToday } from "@/lib/utils/date";
 import { calculateTaskLayout } from "../utils/timeLine";
 import TimelineBlock from "./TimelineBlock";
 import CurrentTimeLine from "./CurrentTimeLine";
 
 type Props = {
   tasks: Task[];
+  selectedDate: Date;
   onTaskClick?: (task: Task) => void;
 };
 
@@ -17,8 +19,9 @@ const TIMELINE_CONFIG = {
   hourHeight: 60, // 1時間あたりの高さ（px）
 } as const;
 
-const TimelineView = ({ tasks, onTaskClick }: Props) => {
+const TimelineView = ({ tasks, selectedDate, onTaskClick }: Props) => {
   const { startHour, endHour, hourHeight } = TIMELINE_CONFIG;
+  const showCurrentTime = isToday(selectedDate);
   const totalHours = endHour - startHour;
   const hours = Array.from({ length: totalHours + 1 }, (_, i) => startHour + i);
 
@@ -62,12 +65,14 @@ const TimelineView = ({ tasks, onTaskClick }: Props) => {
             />
           ))}
 
-          {/* 現在時刻ライン */}
-          <CurrentTimeLine
-            startHour={startHour}
-            endHour={endHour}
-            hourHeight={hourHeight}
-          />
+          {/* 現在時刻ライン（今日のみ表示） */}
+          {showCurrentTime && (
+            <CurrentTimeLine
+              startHour={startHour}
+              endHour={endHour}
+              hourHeight={hourHeight}
+            />
+          )}
         </div>
       </div>
     </div>

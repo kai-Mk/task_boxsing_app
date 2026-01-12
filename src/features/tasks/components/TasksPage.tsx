@@ -97,7 +97,11 @@ const TasksPage = ({ initialTasks, initialDate, teamId }: Props) => {
 
         {/* 右カラム: タイムライン */}
         <div className="bg-gray-50 rounded-xl p-4 overflow-hidden flex flex-col">
-          <TimelineView tasks={tasks} onTaskClick={handleTaskClick} />
+          <TimelineView
+            tasks={tasks}
+            selectedDate={selectedDate}
+            onTaskClick={handleTaskClick}
+          />
         </div>
       </div>
 
