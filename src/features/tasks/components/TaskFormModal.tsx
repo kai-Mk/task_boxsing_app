@@ -1,6 +1,14 @@
 "use client";
 
+import { useForm, Controller } from "react-hook-form";
+import { TaskColor, TaskType, MtgAvailability } from "@prisma/client";
 import Modal from "@/components/ui/Modal";
+import Input from "@/components/ui/Input";
+import TextArea from "@/components/ui/TextArea";
+import TimePicker from "@/components/ui/TimePicker";
+import RadioGroup from "@/components/ui/RadioGroup";
+import ColorPicker from "@/components/ui/ColorPicker";
+import Button from "@/components/ui/Button";
 
 type Props = {
   isOpen: boolean;
@@ -8,131 +16,140 @@ type Props = {
   onSubmit?: (data: TaskFormData) => void;
 };
 
-// TODO: 後でちゃんとした型に置き換え
 export type TaskFormData = {
   title: string;
-  startTime: number;
-  endTime: number;
-  type: "WORK" | "BREAK";
-  mtgAvailability: "AVAILABLE" | "CHAT_ONLY" | "UNAVAILABLE";
+  startTime: string;
+  endTime: string;
+  type: TaskType;
+  mtgAvailability: MtgAvailability;
   description?: string;
-  color: string;
+  color: TaskColor;
 };
 
+const TYPE_OPTIONS = [
+  { value: "WORK", label: "作業" },
+  { value: "BREAK", label: "休憩" },
+];
+
+const MTG_OPTIONS = [
+  { value: "AVAILABLE", label: "対応可能" },
+  { value: "CHAT_ONLY", label: "チャットのみ" },
+  { value: "UNAVAILABLE", label: "対応不可" },
+];
+
 const TaskFormModal = ({ isOpen, onClose, onSubmit }: Props) => {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: フォームデータを収集してonSubmitを呼ぶ
-    console.log("Form submitted");
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm<TaskFormData>({
+    defaultValues: {
+      title: "",
+      startTime: "09:00",
+      endTime: "10:00",
+      type: "WORK",
+      mtgAvailability: "AVAILABLE",
+      description: "",
+      color: "BLUE",
+    },
+  });
+
+  const handleFormSubmit = (data: TaskFormData) => {
+    console.log("Form submitted:", data);
+    onSubmit?.(data);
+    reset();
+    onClose();
+  };
+
+  const handleClose = () => {
+    reset();
     onClose();
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="タスクを追加" size="md">
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <Modal isOpen={isOpen} onClose={handleClose} title="タスクを追加" size="md">
+      <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
         {/* タイトル */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            タイトル
-          </label>
-          <input
-            type="text"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="タスク名を入力"
-          />
-        </div>
+        <Input
+          label="タイトル"
+          type="text"
+          register={register("title", { required: "タイトルを入力してください" })}
+          error={errors.title?.message}
+          required
+        />
 
         {/* 時間 */}
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              開始時刻
-            </label>
-            <input
-              type="time"
-              step="900"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              終了時刻
-            </label>
-            <input
-              type="time"
-              step="900"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-        </div>
-
-        {/* タイプ */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            タイプ
-          </label>
-          <div className="flex gap-4">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="type"
-                value="WORK"
-                defaultChecked
-                className="w-4 h-4 text-blue-600"
-              />
-              <span className="text-gray-700">作業</span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name="type"
-                value="BREAK"
-                className="w-4 h-4 text-blue-600"
-              />
-              <span className="text-gray-700">休憩</span>
-            </label>
-          </div>
-        </div>
-
-        {/* ミーティング可否 */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            ミーティング可否
-          </label>
-          <select className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-            <option value="AVAILABLE">対応可能</option>
-            <option value="CHAT_ONLY">チャットのみ</option>
-            <option value="UNAVAILABLE">対応不可</option>
-          </select>
-        </div>
-
-        {/* 説明 */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            説明（任意）
-          </label>
-          <textarea
-            rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-            placeholder="タスクの詳細を入力"
+          <TimePicker
+            label="開始時刻"
+            register={register("startTime")}
+            error={errors.startTime?.message}
+            required
+          />
+          <TimePicker
+            label="終了時刻"
+            register={register("endTime")}
+            error={errors.endTime?.message}
+            required
           />
         </div>
 
+        {/* タイプ */}
+        <RadioGroup
+          label="タイプ"
+          name="type"
+          options={TYPE_OPTIONS}
+          register={register("type")}
+          error={errors.type?.message}
+        />
+
+        {/* ミーティング可否 */}
+        <RadioGroup
+          label="ミーティング可否"
+          name="mtgAvailability"
+          options={MTG_OPTIONS}
+          register={register("mtgAvailability")}
+          error={errors.mtgAvailability?.message}
+        />
+
+        {/* 色選択 */}
+        <Controller
+          name="color"
+          control={control}
+          render={({ field }) => (
+            <ColorPicker
+              label="色"
+              value={field.value ?? "BLUE"}
+              onChange={field.onChange}
+              error={errors.color?.message}
+            />
+          )}
+        />
+
+        {/* 説明 */}
+        <TextArea
+          label="説明"
+          hint="（任意）"
+          register={register("description")}
+          error={errors.description?.message}
+          rows={3}
+        />
+
         {/* ボタン */}
         <div className="flex gap-3 justify-end pt-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition"
-          >
-            キャンセル
-          </button>
-          <button
+          <Button
+            label="キャンセル"
+            variant="secondary"
+            fullWidth={false}
+            onClick={handleClose}
+          />
+          <Button
+            label="追加"
             type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-          >
-            追加
-          </button>
+            fullWidth={false}
+          />
         </div>
       </form>
     </Modal>
