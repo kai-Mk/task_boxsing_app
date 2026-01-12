@@ -35,9 +35,23 @@ export const taskRepository = {
         date,
         deletedAt: null,
       },
-      orderBy: {
-        startTime: "asc",
-      },
+      orderBy: [
+        { startTime: "asc" },
+        { id: "asc" },
+      ],
+    });
+  },
+
+  findById: async (id: string) => {
+    return prisma.task.findUnique({
+      where: { id },
+    });
+  },
+
+  softDelete: async (id: string) => {
+    return prisma.task.update({
+      where: { id },
+      data: { deletedAt: new Date() },
     });
   },
 };

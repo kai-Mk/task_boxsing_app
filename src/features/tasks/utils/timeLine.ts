@@ -18,25 +18,23 @@ const isOverlapping = (task1: Task, task2: Task): boolean => {
 export const calculateTaskLayout = (tasks: Task[]): TaskWithLayout[] => {
   if (tasks.length === 0) return [];
 
-  // 開始時間でソート
-  const sortedTasks = [...tasks].sort((a, b) => a.startTime - b.startTime);
-
   // 各タスクのグループIDと列インデックスを追跡
-  const taskInfo: Map<string, { groupId: number; columnIndex: number }> = new Map();
+  const taskInfo: Map<string, { groupId: number; columnIndex: number }> =
+    new Map();
 
   // グループごとの最大列数
   const groupMaxColumns: Map<number, number> = new Map();
 
   let currentGroupId = 0;
 
-  for (let i = 0; i < sortedTasks.length; i++) {
-    const task = sortedTasks[i];
+  for (let i = 0; i < tasks.length; i++) {
+    const task = tasks[i];
 
     // 重なるタスクを見つける
     const overlappingTasks: Task[] = [];
     for (let j = 0; j < i; j++) {
-      if (isOverlapping(task, sortedTasks[j])) {
-        overlappingTasks.push(sortedTasks[j]);
+      if (isOverlapping(task, tasks[j])) {
+        overlappingTasks.push(tasks[j]);
       }
     }
 
@@ -51,7 +49,9 @@ export const calculateTaskLayout = (tasks: Task[]): TaskWithLayout[] => {
       const groupId = overlappingInfo[0].groupId;
 
       // 使われている列を取得
-      const usedColumns = new Set(overlappingInfo.map(info => info.columnIndex));
+      const usedColumns = new Set(
+        overlappingInfo.map(info => info.columnIndex)
+      );
 
       // 空いている最小の列を見つける
       let columnIndex = 0;
@@ -68,7 +68,7 @@ export const calculateTaskLayout = (tasks: Task[]): TaskWithLayout[] => {
   }
 
   // 結果を構築
-  return sortedTasks.map(task => {
+  return tasks.map(task => {
     const info = taskInfo.get(task.id)!;
     const totalColumns = groupMaxColumns.get(info.groupId) || 1;
 

@@ -16,4 +16,11 @@ export const apiClient = {
     });
     return res.json();
   },
+
+  delete: async <T>(url: string): Promise<ApiResponse<T>> => {
+    const res = await fetch(url, {
+      method: "DELETE",
+    });
+    return res.json();
+  },
 };

@@ -26,7 +26,20 @@ export const taskService = {
   /**
    * タスクのステータスを更新
    */
-  updateStatus: async (teamId: string, taskId: string, status: "TODO" | "DONE") => {
-    return apiClient.post<Task>(`/api/teams/${teamId}/tasks/${taskId}/status`, { status });
+  updateStatus: async (
+    teamId: string,
+    taskId: string,
+    status: "TODO" | "DONE"
+  ) => {
+    return apiClient.post<Task>(`/api/teams/${teamId}/tasks/${taskId}/status`, {
+      status,
+    });
+  },
+
+  /**
+   * タスクを削除
+   */
+  delete: async (teamId: string, taskId: string) => {
+    return apiClient.delete<Task>(`/api/teams/${teamId}/tasks/${taskId}`);
   },
 };

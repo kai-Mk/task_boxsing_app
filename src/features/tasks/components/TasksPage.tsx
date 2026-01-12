@@ -28,6 +28,7 @@ const TasksPage = ({ initialTasks, initialDate, teamId }: Props) => {
     changeDate,
     addTask,
     toggleStatus,
+    deleteTask,
     clearToast,
   } = useTasks(teamId, initialTasks, initialDate);
 
@@ -47,10 +48,12 @@ const TasksPage = ({ initialTasks, initialDate, teamId }: Props) => {
     // TODO: 編集モーダルを開く
   };
 
-  // タスク削除（TODO: 削除処理）
-  const handleDeleteTask = (task: Task) => {
-    console.log("Delete task:", task);
-    // TODO: 削除確認 → 削除処理
+  // タスク削除
+  const handleDeleteTask = async (task: Task) => {
+    const success = await deleteTask(task.id);
+    if (success) {
+      setSelectedTask(null);
+    }
   };
 
   // タスク追加
@@ -105,11 +108,7 @@ const TasksPage = ({ initialTasks, initialDate, teamId }: Props) => {
 
       {/* Toast */}
       {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={clearToast}
-        />
+        <Toast message={toast.message} type={toast.type} onClose={clearToast} />
       )}
     </div>
   );

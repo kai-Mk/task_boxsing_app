@@ -17,11 +17,9 @@ const TaskList = ({
   onTaskClick,
   onAddClick,
 }: Props) => {
-  // 開始時刻でソート
-  const sortedTasks = [...tasks].sort((a, b) => a.startTime - b.startTime);
-
-  const todoTasks = sortedTasks.filter(t => t.status === "TODO");
-  const doneTasks = sortedTasks.filter(t => t.status === "DONE");
+  // tasksは既にソート済み前提
+  const todoTasks = tasks.filter(t => t.status === "TODO");
+  const doneTasks = tasks.filter(t => t.status === "DONE");
 
   return (
     <div className="flex flex-col h-full">
@@ -33,7 +31,7 @@ const TaskList = ({
       </div>
 
       <div className="flex-1 overflow-y-auto space-y-2">
-        {sortedTasks.length === 0 ? (
+        {tasks.length === 0 ? (
           <div className="text-center py-8 text-gray-400">
             <p>タスクがありません</p>
             <p className="text-sm mt-1">
