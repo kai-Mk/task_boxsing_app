@@ -90,8 +90,9 @@ MVP 機能を実装するための作業リスト。
 - [x] TeamMember Repository / Service 作成
 - [x] Zodバリデーションスキーマ (`lib/validators/task.ts`)
 - [x] 日付ユーティリティ (`lib/utils/date.ts`)
-- [ ] タスク更新 API (`PUT /api/teams/[teamId]/tasks/[taskId]`)
-- [ ] タスク削除 API (`DELETE /api/teams/[teamId]/tasks/[taskId]`)
+- [x] タスク更新 API (`PUT /api/teams/[teamId]/tasks/[taskId]`)
+- [x] タスク削除 API (`DELETE /api/teams/[teamId]/tasks/[taskId]`)
+- [x] ステータス更新 API (`POST /api/teams/[teamId]/tasks/[taskId]/status`)
 
 ### 3-2. タスク管理画面
 
@@ -103,14 +104,15 @@ MVP 機能を実装するための作業リスト。
 - [x] MTG 可否バッジ表示
 - [x] タイムライン重なり対応（同時間帯のタスクを横並び表示）
 
-### 3-3. タスク追加・編集
+### 3-3. タスク追加・編集・削除
 
 - [x] タスク追加モーダル/フォーム
   - タスク名、日付、開始/終了時刻（15 分単位）
   - 種別（Work/Break）、MTG 可否、詳細、色
-- [ ] タスク詳細モーダル
-- [ ] タスク編集フォーム
-- [ ] タスク削除確認
+- [x] タスク詳細モーダル
+- [x] タスク編集フォーム（TaskFormModalを再利用）
+- [x] タスク削除機能
+- [x] ステータス変更のバックエンド連携（楽観的更新+ロールバック）
 
 ### 3-4. 日付切り替え
 
@@ -124,6 +126,7 @@ MVP 機能を実装するための作業リスト。
 - [x] タスク変換ユーティリティ (`features/tasks/utils/taskTransform.ts`)
 - [x] タイムラインユーティリティ (`features/tasks/utils/timeLine.ts`)
 - [x] タスク型定義 (`features/tasks/types/index.ts`)
+- [x] タスクソートユーティリティ (`lib/utils/task.ts`)
 
 ### 3-6. 未完了タスクリマインド
 
