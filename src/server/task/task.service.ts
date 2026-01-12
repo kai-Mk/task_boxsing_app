@@ -69,4 +69,52 @@ export const taskService = {
     const deletedTask = await taskRepository.softDelete(taskId);
     return { success: true, data: deletedTask };
   },
+
+  update: async (
+    taskId: string,
+    teamMemberId: string,
+    data: {
+      title: string;
+      description?: string;
+      startTime: number;
+      endTime: number;
+      type: TaskType;
+      color: TaskColor;
+      mtgAvailability: MtgAvailability;
+    }
+  ): Promise<ServiceResult<Task>> => {
+    const task = await taskRepository.findById(taskId);
+
+    if (!task) {
+      return { success: false, message: "タスクが見つかりません", status: 404 };
+    }
+
+    if (task.teamMemberId !== teamMemberId) {
+      return {
+        success: false,
+        message: "このタスクを更新する権限がありません",
+        status: 403,
+      };
+    }
+
+    if (task.deletedAt) {
+      return {
+        success: false,
+        message: "削除されたタスクは更新できません",
+        status: 400,
+      };
+    }
+
+    const updatedTask = await taskRepository.update(taskId, {
+      title: data.title,
+      description: data.description || null,
+      startTime: data.startTime,
+      endTime: data.endTime,
+      type: data.type,
+      color: data.color,
+      mtgAvailability: data.mtgAvailability,
+    });
+
+    return { success: true, data: updatedTask };
+  },
 };

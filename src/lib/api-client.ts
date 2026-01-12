@@ -23,4 +23,13 @@ export const apiClient = {
     });
     return res.json();
   },
+
+  put: async <T>(url: string, data: unknown): Promise<ApiResponse<T>> => {
+    const res = await fetch(url, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    return res.json();
+  },
 };

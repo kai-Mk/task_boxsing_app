@@ -1,7 +1,7 @@
 import { Task } from "@prisma/client";
 import { apiClient } from "@/lib/api-client";
 import { TaskFormData } from "../types";
-import { toCreateTaskPayload } from "../utils/taskTransform";
+import { toTaskPayload } from "../utils/taskTransform";
 
 /**
  * タスク関連のAPIクライアント
@@ -19,7 +19,7 @@ export const taskService = {
    * タスクを作成
    */
   create: async (teamId: string, formData: TaskFormData, date: Date) => {
-    const payload = toCreateTaskPayload(formData, date);
+    const payload = toTaskPayload(formData, date);
     return apiClient.post<Task>(`/api/teams/${teamId}/tasks`, payload);
   },
 
@@ -41,5 +41,13 @@ export const taskService = {
    */
   delete: async (teamId: string, taskId: string) => {
     return apiClient.delete<Task>(`/api/teams/${teamId}/tasks/${taskId}`);
+  },
+
+  /**
+   * タスクを更新
+   */
+  update: async (teamId: string, taskId: string, formData: TaskFormData) => {
+    const payload = toTaskPayload(formData);
+    return apiClient.put<Task>(`/api/teams/${teamId}/tasks/${taskId}`, payload);
   },
 };

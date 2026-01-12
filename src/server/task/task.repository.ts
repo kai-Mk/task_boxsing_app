@@ -51,4 +51,30 @@ export const taskRepository = {
       data: { deletedAt: new Date() },
     });
   },
+
+  update: async (
+    id: string,
+    data: {
+      title: string;
+      description?: string | null;
+      startTime: number;
+      endTime: number;
+      type: TaskType;
+      color: TaskColor;
+      mtgAvailability: MtgAvailability;
+    }
+  ) => {
+    return prisma.task.update({
+      where: { id },
+      data: {
+        title: data.title,
+        description: data.description,
+        startTime: data.startTime,
+        endTime: data.endTime,
+        type: data.type,
+        color: data.color,
+        mtgAvailability: data.mtgAvailability,
+      },
+    });
+  },
 };

@@ -2,8 +2,7 @@ import { TaskColor, TaskType, MtgAvailability } from "@prisma/client";
 import { timeToMinutes } from "@/lib/utils/date";
 import { TaskFormData } from "../types";
 
-export type CreateTaskPayload = {
-  date: string;
+export type TaskPayload = {
   title: string;
   description: string;
   startTime: number;
@@ -13,15 +12,13 @@ export type CreateTaskPayload = {
   mtgAvailability: MtgAvailability;
 };
 
+export type CreateTaskPayload = TaskPayload & { date: string };
+
 /**
  * フォームデータをAPI送信用のペイロードに変換
  */
-export const toCreateTaskPayload = (
-  formData: TaskFormData,
-  date: Date
-): CreateTaskPayload => {
-  return {
-    date: date.toISOString(),
+export const toTaskPayload = (formData: TaskFormData, date?: Date) => {
+  const payload: TaskPayload = {
     title: formData.title,
     description: formData.description || "",
     startTime: timeToMinutes(formData.startTime),
@@ -30,4 +27,9 @@ export const toCreateTaskPayload = (
     color: formData.color,
     mtgAvailability: formData.mtgAvailability,
   };
+
+  if (date) {
+    return { ...payload, date: date.toISOString() };
+  }
+  return payload;
 };

@@ -16,6 +16,7 @@ type UseTasksReturn = {
   toast: ToastState;
   changeDate: (date: Date) => Promise<void>;
   addTask: (formData: TaskFormData) => Promise<boolean>;
+  updateTask: (taskId: string, formData: TaskFormData) => Promise<boolean>;
   toggleStatus: (taskId: string) => void;
   deleteTask: (taskId: string) => Promise<boolean>;
   clearToast: () => void;
@@ -83,6 +84,35 @@ export const useTasks = (
     [teamId, selectedDate]
   );
 
+  // タスク更新
+  const updateTask = useCallback(
+    async (taskId: string, formData: TaskFormData): Promise<boolean> => {
+      setIsLoading(true);
+
+      try {
+        const result = await taskService.update(teamId, taskId, formData);
+
+        if (!result.success) {
+          setToast({ message: result.message, type: "error" });
+          return false;
+        }
+
+        setTasks(prev =>
+          sortTasks(prev.map(task => (task.id === taskId ? result.data : task)))
+        );
+        setToast({ message: "タスクを更新しました", type: "success" });
+        return true;
+      } catch (error) {
+        console.error("タスク更新エラー:", error);
+        setToast({ message: "タスクの更新に失敗しました", type: "error" });
+        return false;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [teamId]
+  );
+
   // ステータストグル（楽観的更新）
   const toggleStatus = useCallback((taskId: string) => {
     setTasks(prev =>
@@ -134,6 +164,7 @@ export const useTasks = (
     toast,
     changeDate,
     addTask,
+    updateTask,
     toggleStatus,
     deleteTask,
     clearToast,

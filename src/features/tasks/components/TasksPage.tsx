@@ -18,6 +18,7 @@ type Props = {
 
 const TasksPage = ({ initialTasks, initialDate, teamId }: Props) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   const {
@@ -27,6 +28,7 @@ const TasksPage = ({ initialTasks, initialDate, teamId }: Props) => {
     toast,
     changeDate,
     addTask,
+    updateTask,
     toggleStatus,
     deleteTask,
     clearToast,
@@ -42,10 +44,20 @@ const TasksPage = ({ initialTasks, initialDate, teamId }: Props) => {
     setSelectedTask(null);
   };
 
-  // タスク編集（TODO: 編集モーダルを開く）
+  // タスク編集モーダルを開く
   const handleEditTask = (task: Task) => {
-    console.log("Edit task:", task);
-    // TODO: 編集モーダルを開く
+    setEditingTask(task);
+  };
+
+  // タスク更新
+  const handleUpdateTask = async (
+    formData: Parameters<typeof updateTask>[1]
+  ) => {
+    if (!editingTask) return;
+    const success = await updateTask(editingTask.id, formData);
+    if (success) {
+      setEditingTask(null);
+    }
   };
 
   // タスク削除
@@ -95,6 +107,15 @@ const TasksPage = ({ initialTasks, initialDate, teamId }: Props) => {
         onClose={() => setIsAddModalOpen(false)}
         onSubmit={handleAddTask}
         isSubmitting={isLoading}
+      />
+
+      {/* タスク編集モーダル */}
+      <TaskFormModal
+        isOpen={editingTask !== null}
+        onClose={() => setEditingTask(null)}
+        onSubmit={handleUpdateTask}
+        isSubmitting={isLoading}
+        initialData={editingTask ?? undefined}
       />
 
       {/* タスク詳細モーダル */}

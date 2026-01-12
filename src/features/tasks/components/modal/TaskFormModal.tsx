@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
+import { Task } from "@prisma/client";
 import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
 import TextArea from "@/components/ui/TextArea";
@@ -9,6 +10,7 @@ import TimePicker from "@/components/ui/TimePicker";
 import RadioGroup from "@/components/ui/RadioGroup";
 import ColorPicker from "@/components/ui/ColorPicker";
 import Button from "@/components/ui/Button";
+import { minutesToTime } from "@/lib/utils/date";
 import { TaskFormData } from "../../types";
 
 type Props = {
@@ -16,6 +18,7 @@ type Props = {
   onClose: () => void;
   onSubmit?: (data: TaskFormData) => void;
   isSubmitting?: boolean;
+  initialData?: Task;
 };
 
 const TYPE_OPTIONS = [
@@ -24,17 +27,30 @@ const TYPE_OPTIONS = [
 ];
 
 const MTG_OPTIONS = [
-  { value: "AVAILABLE", label: "対応可能" },
+  { value: "AVAILABLE", label: "MTG可能" },
   { value: "CHAT_ONLY", label: "チャットのみ" },
-  { value: "UNAVAILABLE", label: "対応不可" },
+  { value: "UNAVAILABLE", label: "MTG不可" },
 ];
+
+const DEFAULT_VALUES: TaskFormData = {
+  title: "",
+  startTime: "09:00",
+  endTime: "10:00",
+  type: "WORK",
+  mtgAvailability: "AVAILABLE",
+  description: "",
+  color: "BLUE",
+};
 
 const TaskFormModal = ({
   isOpen,
   onClose,
   onSubmit,
   isSubmitting = false,
+  initialData,
 }: Props) => {
+  const isEditMode = !!initialData;
+
   const {
     register,
     handleSubmit,
@@ -42,23 +58,27 @@ const TaskFormModal = ({
     reset,
     formState: { errors },
   } = useForm<TaskFormData>({
-    defaultValues: {
-      title: "",
-      startTime: "09:00",
-      endTime: "10:00",
-      type: "WORK",
-      mtgAvailability: "AVAILABLE",
-      description: "",
-      color: "BLUE",
-    },
+    defaultValues: DEFAULT_VALUES,
   });
 
-  // モーダルが閉じた時にフォームをリセット
+  // モーダルが開いた時にフォームを初期化
   useEffect(() => {
-    if (!isOpen) {
-      reset();
+    if (isOpen) {
+      if (initialData) {
+        reset({
+          title: initialData.title,
+          startTime: minutesToTime(initialData.startTime),
+          endTime: minutesToTime(initialData.endTime),
+          type: initialData.type,
+          mtgAvailability: initialData.mtgAvailability,
+          description: initialData.description ?? "",
+          color: initialData.color,
+        });
+      } else {
+        reset(DEFAULT_VALUES);
+      }
     }
-  }, [isOpen, reset]);
+  }, [isOpen, initialData, reset]);
 
   const handleFormSubmit = (data: TaskFormData) => {
     onSubmit?.(data);
@@ -70,7 +90,12 @@ const TaskFormModal = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} title="タスクを追加" size="md">
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      title={isEditMode ? "タスクを編集" : "タスクを追加"}
+      size="md"
+    >
       <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
         {/* タイトル */}
         <Input
@@ -149,7 +174,7 @@ const TaskFormModal = ({
             onClick={handleClose}
           />
           <Button
-            label="追加"
+            label={isEditMode ? "保存" : "追加"}
             type="submit"
             fullWidth={false}
             loading={isSubmitting}

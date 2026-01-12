@@ -7,11 +7,11 @@ type Props = {
 
 const MTG_CONFIG = {
   AVAILABLE: {
-    label: "MTG可",
+    label: "MTG可能",
     className: "bg-green-100 text-green-700 border-green-300",
   },
   CHAT_ONLY: {
-    label: "声掛けOK",
+    label: "チャットのみ",
     className: "bg-yellow-100 text-yellow-700 border-yellow-300",
   },
   UNAVAILABLE: {
