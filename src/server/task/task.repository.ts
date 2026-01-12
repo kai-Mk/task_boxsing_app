@@ -1,5 +1,10 @@
 import { prisma } from "@/server/db";
-import { TaskType, TaskColor, MtgAvailability } from "@prisma/client";
+import {
+  TaskType,
+  TaskColor,
+  MtgAvailability,
+  TaskStatus,
+} from "@prisma/client";
 
 export const taskRepository = {
   create: async (data: {
@@ -75,6 +80,13 @@ export const taskRepository = {
         color: data.color,
         mtgAvailability: data.mtgAvailability,
       },
+    });
+  },
+
+  updateStatus: async (id: string, status: TaskStatus) => {
+    return prisma.task.update({
+      where: { id },
+      data: { status },
     });
   },
 };

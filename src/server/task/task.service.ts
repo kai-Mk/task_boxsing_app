@@ -1,5 +1,11 @@
 import { taskRepository } from "./task.repository";
-import { Task, TaskType, TaskColor, MtgAvailability } from "@prisma/client";
+import {
+  Task,
+  TaskType,
+  TaskColor,
+  MtgAvailability,
+  TaskStatus,
+} from "@prisma/client";
 import { ServiceResult } from "@/types/server/result";
 
 export const taskService = {
@@ -79,6 +85,20 @@ export const taskService = {
       mtgAvailability: data.mtgAvailability,
     });
 
+    return { success: true, data: updatedTask };
+  },
+
+  updateStatus: async (
+    taskId: string,
+    status: TaskStatus
+  ): Promise<ServiceResult<Task>> => {
+    const task = await taskRepository.findById(taskId);
+
+    if (!task) {
+      return { success: false, message: "タスクが見つかりません", status: 404 };
+    }
+
+    const updatedTask = await taskRepository.updateStatus(taskId, status);
     return { success: true, data: updatedTask };
   },
 };

@@ -17,7 +17,7 @@ type UseTasksReturn = {
   changeDate: (date: Date) => Promise<void>;
   addTask: (formData: TaskFormData) => Promise<boolean>;
   updateTask: (taskId: string, formData: TaskFormData) => Promise<boolean>;
-  toggleStatus: (taskId: string) => void;
+  toggleStatus: (taskId: string) => Promise<void>;
   deleteTask: (taskId: string) => Promise<boolean>;
   clearToast: () => void;
 };
@@ -113,17 +113,44 @@ export const useTasks = (
     [teamId]
   );
 
-  // ステータストグル（楽観的更新）
-  const toggleStatus = useCallback((taskId: string) => {
-    setTasks(prev =>
-      prev.map(task =>
-        task.id === taskId
-          ? { ...task, status: task.status === "TODO" ? "DONE" : "TODO" }
-          : task
-      )
-    );
-    // TODO: API呼び出し（バックグラウンドで実行）
-  }, []);
+  // ステータストグル（楽観的更新 + API連携）
+  const toggleStatus = useCallback(
+    async (taskId: string) => {
+      const targetTask = tasks.find(task => task.id === taskId);
+      if (!targetTask) return;
+
+      const newStatus = targetTask.status === "TODO" ? "DONE" : "TODO";
+      const prevTasks = tasks;
+
+      // 楽観的更新
+      setTasks(prev =>
+        prev.map(task =>
+          task.id === taskId ? { ...task, status: newStatus } : task
+        )
+      );
+
+      // API呼び出し
+      try {
+        const result = await taskService.updateStatus(
+          teamId,
+          taskId,
+          newStatus
+        );
+        if (!result.success) {
+          setTasks(prevTasks);
+          setToast({
+            message: "ステータスの更新に失敗しました",
+            type: "error",
+          });
+        }
+      } catch (error) {
+        console.error("ステータス更新エラー:", error);
+        setTasks(prevTasks);
+        setToast({ message: "ステータスの更新に失敗しました", type: "error" });
+      }
+    },
+    [teamId, tasks]
+  );
 
   // タスク削除
   const deleteTask = useCallback(
