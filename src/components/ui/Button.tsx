@@ -2,7 +2,7 @@ type ButtonProps = {
   label: string;
   type?: "button" | "submit";
   loading?: boolean;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "danger";
   fullWidth?: boolean;
   onClick?: () => void;
 };
@@ -14,7 +14,12 @@ const VARIANT_CLASSES = {
   },
   secondary: {
     normal: "bg-white text-gray-600 border border-gray-300 hover:bg-gray-50",
-    disabled: "bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed",
+    disabled:
+      "bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed",
+  },
+  danger: {
+    normal: "bg-red-500 text-white hover:bg-red-600",
+    disabled: "bg-red-300 text-white cursor-not-allowed",
   },
 } as const;
 

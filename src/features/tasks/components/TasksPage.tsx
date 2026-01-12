@@ -7,7 +7,8 @@ import { useTasks } from "../hooks/useTasks";
 import DatePicker from "./DatePicker";
 import TaskList from "./TaskList";
 import TimelineView from "./TimelineView";
-import TaskFormModal from "./TaskFormModal";
+import TaskFormModal from "./modal/TaskFormModal";
+import TaskDetailModal from "./modal/TaskDetailModal";
 
 type Props = {
   initialTasks: Task[];
@@ -17,6 +18,7 @@ type Props = {
 
 const TasksPage = ({ initialTasks, initialDate, teamId }: Props) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   const {
     tasks,
@@ -29,10 +31,26 @@ const TasksPage = ({ initialTasks, initialDate, teamId }: Props) => {
     clearToast,
   } = useTasks(teamId, initialTasks, initialDate);
 
-  // タスククリック（詳細モーダル表示用）
+  // タスククリック（詳細モーダル表示）
   const handleTaskClick = (task: Task) => {
-    console.log("Task clicked:", task);
-    // TODO: 詳細モーダルを開く
+    setSelectedTask(task);
+  };
+
+  // 詳細モーダルを閉じる
+  const handleCloseDetail = () => {
+    setSelectedTask(null);
+  };
+
+  // タスク編集（TODO: 編集モーダルを開く）
+  const handleEditTask = (task: Task) => {
+    console.log("Edit task:", task);
+    // TODO: 編集モーダルを開く
+  };
+
+  // タスク削除（TODO: 削除処理）
+  const handleDeleteTask = (task: Task) => {
+    console.log("Delete task:", task);
+    // TODO: 削除確認 → 削除処理
   };
 
   // タスク追加
@@ -74,6 +92,15 @@ const TasksPage = ({ initialTasks, initialDate, teamId }: Props) => {
         onClose={() => setIsAddModalOpen(false)}
         onSubmit={handleAddTask}
         isSubmitting={isLoading}
+      />
+
+      {/* タスク詳細モーダル */}
+      <TaskDetailModal
+        task={selectedTask}
+        isOpen={selectedTask !== null}
+        onClose={handleCloseDetail}
+        onEdit={handleEditTask}
+        onDelete={handleDeleteTask}
       />
 
       {/* Toast */}

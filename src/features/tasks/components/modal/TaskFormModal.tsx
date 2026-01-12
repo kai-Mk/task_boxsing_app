@@ -9,7 +9,7 @@ import TimePicker from "@/components/ui/TimePicker";
 import RadioGroup from "@/components/ui/RadioGroup";
 import ColorPicker from "@/components/ui/ColorPicker";
 import Button from "@/components/ui/Button";
-import { TaskFormData } from "../types";
+import { TaskFormData } from "../../types";
 
 type Props = {
   isOpen: boolean;
