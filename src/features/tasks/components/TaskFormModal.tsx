@@ -1,7 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { TaskColor, TaskType, MtgAvailability } from "@prisma/client";
 import Modal from "@/components/ui/Modal";
 import Input from "@/components/ui/Input";
 import TextArea from "@/components/ui/TextArea";
@@ -9,21 +9,13 @@ import TimePicker from "@/components/ui/TimePicker";
 import RadioGroup from "@/components/ui/RadioGroup";
 import ColorPicker from "@/components/ui/ColorPicker";
 import Button from "@/components/ui/Button";
+import { TaskFormData } from "../types";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   onSubmit?: (data: TaskFormData) => void;
-};
-
-export type TaskFormData = {
-  title: string;
-  startTime: string;
-  endTime: string;
-  type: TaskType;
-  mtgAvailability: MtgAvailability;
-  description?: string;
-  color: TaskColor;
+  isSubmitting?: boolean;
 };
 
 const TYPE_OPTIONS = [
@@ -37,7 +29,7 @@ const MTG_OPTIONS = [
   { value: "UNAVAILABLE", label: "対応不可" },
 ];
 
-const TaskFormModal = ({ isOpen, onClose, onSubmit }: Props) => {
+const TaskFormModal = ({ isOpen, onClose, onSubmit, isSubmitting = false }: Props) => {
   const {
     register,
     handleSubmit,
@@ -56,11 +48,15 @@ const TaskFormModal = ({ isOpen, onClose, onSubmit }: Props) => {
     },
   });
 
+  // モーダルが閉じた時にフォームをリセット
+  useEffect(() => {
+    if (!isOpen) {
+      reset();
+    }
+  }, [isOpen, reset]);
+
   const handleFormSubmit = (data: TaskFormData) => {
-    console.log("Form submitted:", data);
     onSubmit?.(data);
-    reset();
-    onClose();
   };
 
   const handleClose = () => {
@@ -149,6 +145,7 @@ const TaskFormModal = ({ isOpen, onClose, onSubmit }: Props) => {
             label="追加"
             type="submit"
             fullWidth={false}
+            loading={isSubmitting}
           />
         </div>
       </form>

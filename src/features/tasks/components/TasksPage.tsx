@@ -2,10 +2,14 @@
 
 import { useState } from "react";
 import { Task } from "@prisma/client";
+import { apiClient } from "@/lib/api-client";
+import Toast from "@/components/ui/Toast";
 import DatePicker from "./DatePicker";
 import TaskList from "./TaskList";
 import TimelineView from "./TimelineView";
 import TaskFormModal from "./TaskFormModal";
+import { TaskFormData } from "../types";
+import { toCreateTaskPayload } from "../utils/taskTransform";
 
 type Props = {
   initialTasks: Task[];
@@ -17,6 +21,8 @@ const TasksPage = ({ initialTasks, initialDate, teamId }: Props) => {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
   // 日付変更時（TODO: API呼び出しに置き換え）
   const handleDateChange = (date: Date) => {
@@ -53,6 +59,32 @@ const TasksPage = ({ initialTasks, initialDate, teamId }: Props) => {
     setIsAddModalOpen(false);
   };
 
+  // タスク追加
+  const handleAddTask = async (formData: TaskFormData) => {
+    setIsSubmitting(true);
+
+    try {
+      const payload = toCreateTaskPayload(formData, selectedDate);
+      const result = await apiClient.post<Task>(`/api/teams/${teamId}/tasks`, payload);
+
+      if (!result.success) {
+        console.error("タスク作成エラー:", result.message);
+        setToast({ message: result.message || "タスクの作成に失敗しました", type: "error" });
+        return;
+      }
+
+      // 成功したらタスクリストに追加
+      setTasks((prev) => [...prev, result.data]);
+      setIsAddModalOpen(false);
+      setToast({ message: "タスクを追加しました", type: "success" });
+    } catch (error) {
+      console.error("タスク作成エラー:", error);
+      setToast({ message: "タスクの作成に失敗しました", type: "error" });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="flex flex-col h-full">
       {/* 日付選択 */}
@@ -79,7 +111,21 @@ const TasksPage = ({ initialTasks, initialDate, teamId }: Props) => {
       </div>
 
       {/* タスク追加モーダル */}
-      <TaskFormModal isOpen={isAddModalOpen} onClose={handleCloseModal} />
+      <TaskFormModal
+        isOpen={isAddModalOpen}
+        onClose={handleCloseModal}
+        onSubmit={handleAddTask}
+        isSubmitting={isSubmitting}
+      />
+
+      {/* Toast */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 };

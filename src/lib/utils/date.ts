@@ -10,3 +10,12 @@ export const getTodayUTC = (): Date => {
     .toUTC()
     .toJSDate();
 };
+
+/**
+ * "HH:mm" 形式の時刻文字列を0時からの分数に変換
+ * @example timeToMinutes("09:00") => 540
+ */
+export const timeToMinutes = (time: string): number => {
+  const dt = DateTime.fromFormat(time, "HH:mm");
+  return dt.hour * 60 + dt.minute;
+};
